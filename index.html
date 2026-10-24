@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Gambian Budget Converter</title>
     <!-- Tailwind CSS v4 CDN via jsDelivr -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             background-color: #0d131f;
@@ -18,7 +18,7 @@
     <!-- Header Section -->
     <div class="text-center my-8">
         <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">The Gambian Budget Converter</h1>
-        <p class="text-gray-400 text-sm">Comparing luxury state assets against essential public services.</p>
+        <p class="text-gray-400 text-sm">Comparing luxury state assets against essential public services and healthcare.</p>
     </div>
 
     <!-- 1. Currency Display Card -->
@@ -28,11 +28,11 @@
                 <h2 class="text-xs font-bold tracking-wider text-gray-400 uppercase mb-1">Display Currency</h2>
                 <p class="text-gray-500 text-xs">Changes all calculations dynamically below.</p>
             </div>
-            <div class="flex bg-[#0f172a] p-1 rounded-lg border border-[#232f45] self-start sm:self-center">
-                <button id="btn-gmd" onclick="setCurrency('GMD')" class="px-4 py-2 text-xs font-bold rounded-md bg-[#eab308] text-[#0f172a] shadow transition-all duration-200 cursor-pointer">
+            <div class="inline-flex rounded-lg p-1 bg-[#0d131f]">
+                <button id="btn-gmd" onclick="setCurrency('GMD')" class="px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-[#eab308] text-[#0d131f]">
                     GMD (D)
                 </button>
-                <button id="btn-usd" onclick="setCurrency('USD')" class="px-4 py-2 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all duration-200 cursor-pointer">
+                <button id="btn-usd" onclick="setCurrency('USD')" class="px-4 py-1.5 rounded-md text-xs font-bold transition-all text-gray-400 hover:text-white">
                     USD ($)
                 </button>
             </div>
@@ -42,122 +42,134 @@
     <!-- 2. Live License & Fleet Scanner Card -->
     <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
         <div class="flex items-center gap-2 mb-2">
-            <span class="text-sm">📷</span>
-            <h2 class="text-xs font-bold tracking-wider text-gray-200 uppercase">Live License & Fleet Scanner</h2>
+            <span>📷</span>
+            <h2 class="text-sm font-bold tracking-wider text-white uppercase">Live License & Fleet Scanner</h2>
         </div>
         <p class="text-gray-400 text-xs mb-4">Select a plate registry category prefix to simulate a viewfinder capture or convoy scan.</p>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-            <button onclick="simulateScan('GG')" class="w-full bg-[#1e293b] hover:bg-[#27354d] border border-[#334155] py-3 px-4 rounded-lg font-bold text-xs text-[#eab308] transition duration-200 cursor-pointer text-center">
-                Scan [GG] (Executive/President)
+            <button onclick="simulateScan('GG')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-[#eab308] border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
+                Scan [GG] (Executive LC300 V6)
             </button>
-            <button onclick="simulateScan('NA')" class="w-full bg-[#1e293b] hover:bg-[#27354d] border border-[#334155] py-3 px-4 rounded-lg font-bold text-xs text-[#22c55e] transition duration-200 cursor-pointer text-center">
-                Scan [NA] (Parliament/MPs)
+            <button onclick="simulateScan('NAM')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-green-400 border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
+                Scan [NAM] (National Assembly MP Prado)
             </button>
-            <button onclick="simulateScan('PR')" class="w-full bg-[#1e293b] hover:bg-[#27354d] border border-[#334155] py-3 px-4 rounded-lg font-bold text-xs text-[#3b82f6] transition duration-200 cursor-pointer text-center">
-                Scan [PR] (Public Ministries)
+            <button onclick="simulateScan('PR')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-blue-400 border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
+                Scan [PR] (Ministry Nissan Patrol V8)
             </button>
-            <button onclick="simulateScan('SG')" class="w-full bg-[#1e293b] hover:bg-[#27354d] border border-[#334155] py-3 px-4 rounded-lg font-bold text-xs text-[#6366f1] transition duration-200 cursor-pointer text-center">
-                Scan [SG] (State Guard Pickups)
+            <button onclick="simulateScan('SG')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-indigo-400 border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
+                Scan [SG] (State Guard LC300 V6)
             </button>
         </div>
 
-        <button onclick="simulateConvoy()" class="w-full bg-[#271d18] hover:bg-[#382820] border border-[#b45309] text-[#f43f5e] font-bold text-xs py-3 px-4 rounded-lg transition duration-200 mb-4 cursor-pointer text-center flex items-center justify-center gap-1">
-            <span>🚨</span> Simulate State Convoy Scan (Multi-Plate Sequence)
+        <button onclick="simulateConvoy()" class="w-full bg-[#2e1f1d] hover:bg-[#3d2926] text-orange-400 border border-orange-900/50 rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors mb-4 flex items-center justify-center gap-2">
+            💥 Simulate State Convoy Scan (Multi-Plate Sequence)
         </button>
 
-        <!-- Dynamic Camera Viewfinder Box -->
-        <div class="bg-[#0f172a] border border-[#1e293b] rounded-lg p-4 flex flex-col justify-center min-h-[70px]">
-            <div class="flex items-center gap-2 mb-2">
-                <button id="camera-toggle-btn" onclick="toggleCamera()" class="px-3 py-1 bg-[#1e293b] text-gray-300 hover:text-white border border-[#334155] text-[10px] font-bold rounded cursor-pointer transition">
-                    Start Camera Feed
-                </button>
-                <div id="camera-dot" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
-                <div id="camera-status" class="text-[11px] text-gray-400 font-mono">Viewfinder passive. Waiting for road asset registration captures...</div>
+        <!-- Viewfinder Log output -->
+        <div class="bg-[#0d131f] rounded-lg p-3 border border-[#1e293b] font-mono text-[11px] text-gray-400 min-h-[40px] flex items-center">
+            <div id="viewfinder-log" class="w-full">
+                <span class="text-yellow-500 animate-pulse">●</span> Viewfinder passive. Waiting for road asset registration captures...
             </div>
-            <div id="viewfinder-feed" class="text-xs font-mono text-[#22c55e] hidden bg-black/40 p-2 rounded border border-emerald-900/30 max-h-[120px] overflow-y-auto"></div>
         </div>
     </div>
 
-    <!-- 3. Metric Filter Inputs -->
+    <!-- 3. Baseline Metric Filters -->
     <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
         <div class="flex items-center gap-2 mb-4">
-            <span class="text-sm">🚒</span>
-            <h2 class="text-xs font-bold tracking-wider text-gray-200 uppercase">Baseline Metric Filters</h2>
+            <span>🚗</span>
+            <h2 class="text-sm font-bold tracking-wider text-white uppercase">Baseline Metric Filters</h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-                <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Vehicle Life Expectancy (Years)</label>
-                <input type="number" id="input-lifespan" value="5" min="1" oninput="recalculateAll()" class="w-full bg-[#0f172a] border border-[#232f45] rounded-lg py-2 px-3 text-sm text-white font-mono focus:outline-none focus:border-gray-500">
+                <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Vehicle Life Expectancy (Years)</label>
+                <input type="number" id="input-life" value="5" oninput="recalculateAll()" class="w-full bg-[#0d131f] border border-[#232f45] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-500">
             </div>
             <div>
-                <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Pump Fuel Baseline (D/L)</label>
-                <input type="number" id="input-fuel" value="120" min="0" oninput="recalculateAll()" class="w-full bg-[#0f172a] border border-[#232f45] rounded-lg py-2 px-3 text-sm text-white font-mono focus:outline-none focus:border-gray-500">
+                <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Pump Fuel Baseline (D/L)</label>
+                <input type="number" id="input-fuel" value="120" oninput="recalculateAll()" class="w-full bg-[#0d131f] border border-[#232f45] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-500">
             </div>
         </div>
     </div>
 
-    <!-- 4. Total Cumulative Cost Output -->
+    <!-- 4. Total Cumulative Fleet Cost -->
     <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xs font-bold tracking-wider text-amber-500 uppercase">Total Cumulative Fleet Cost</h2>
-            <span class="text-[10px] font-semibold bg-[#2e2216] text-[#eab308] border border-[#78350f] rounded px-2 py-0.5 uppercase tracking-wide">Annualized</span>
+        <div class="flex justify-between items-start mb-2">
+            <h2 class="text-xs font-bold tracking-wider text-yellow-500 uppercase">Total Cumulative Fleet Cost</h2>
+            <span class="text-[10px] font-bold bg-[#2e2315] text-amber-500 px-2 py-0.5 rounded border border-amber-900/30">Annualized</span>
         </div>
-        <div id="display-total-cost" class="text-3xl font-black font-mono text-white mb-6">D0.00</div>
-
+        <div id="total-cost-display" class="text-4xl font-extrabold text-white tracking-tight mb-4">
+            D0.00
+        </div>
+        
         <div class="border-t border-[#232f45] pt-4">
-            <div class="flex items-center gap-2 mb-3 text-xs font-bold text-gray-300">
+            <div class="flex items-center gap-2 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
                 <span>📋</span> Compiled Unique Fleet Inventory Track:
             </div>
-            <div id="fleet-list-container" class="text-xs text-gray-500 font-mono italic">
+            <div id="fleet-inventory-track" class="text-xs text-gray-400 italic">
                 No plates registered in active stack. Use scanner controls above.
             </div>
         </div>
     </div>
 
-    <!-- 5. Alternative Civic Value Layout -->
+    <!-- 5. Alternative Civic Value -->
     <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
         <div class="flex items-center gap-2 mb-1">
-            <span class="text-sm">💡</span>
-            <h2 class="text-xs font-bold tracking-wider text-gray-200 uppercase">Alternative Civic Value</h2>
+            <span>💡</span>
+            <h2 class="text-sm font-bold tracking-wider text-white uppercase">Alternative Civic & Medical Value</h2>
         </div>
-        <p class="text-gray-400 text-xs mb-6">Instead of maintaining this scanned luxury fleet budget, the public sector could fund:</p>
+        <p class="text-gray-400 text-xs mb-4">Instead of maintaining this scanned luxury fleet budget, the public sector could fund:</p>
 
-        <!-- Matrix Cards Container -->
         <div class="space-y-3">
-            <!-- AC Array Component -->
-            <div class="bg-[#0f172a] border border-[#1e293b] rounded-xl p-4 flex items-center justify-between">
+            <!-- Medical Equipment Package Slot -->
+            <div class="bg-[#0d131f] rounded-lg p-4 border border-[#1e293b] flex justify-between items-center">
                 <div>
-                    <h3 class="text-xs font-bold text-[#22c55e] mb-1">School & Clinic AC Appliances</h3>
-                    <p id="label-ac-price" class="text-gray-500 text-[11px] font-mono">Unit Price: D35,000</p>
+                    <h3 class="text-sm font-bold text-emerald-400">Essential Hospital Medical Packs</h3>
+                    <p class="text-gray-400 text-[11px] mt-0.5">Includes Oxygen, Saline Bags, Painkillers & Anesthesia setups</p>
+                    <p class="text-gray-500 text-[11px] mt-0.5">Unit Price: <span id="label-price-med">D45,000</span></p>
                 </div>
                 <div class="text-right">
-                    <span id="count-ac" class="text-xl font-black font-mono text-[#22c55e]">0</span>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Units</p>
+                    <span id="count-med" class="text-xl font-extrabold text-emerald-400">0</span>
+                    <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Full Supply Packs</p>
                 </div>
             </div>
 
-            <!-- Heavy Duty Tractor Component -->
-            <div class="bg-[#0f172a] border border-[#1e293b] rounded-xl p-4 flex items-center justify-between">
+            <!-- Farming Tractors -->
+            <div class="bg-[#0d131f] rounded-lg p-4 border border-[#1e293b] flex justify-between items-center">
                 <div>
-                    <h3 class="text-xs font-bold text-[#3b82f6] mb-1">Heavy-Duty Farming Tractors</h3>
-                    <p id="label-tractor-price" class="text-gray-500 text-[11px] font-mono">Unit Price: D1,750,000</p>
+                    <h3 class="text-sm font-bold text-blue-400">Heavy-Duty Farming Tractors</h3>
+                    <p class="text-gray-500 text-[11px] mt-0.5">Unit Price: <span id="label-price-tractors">D1,750,000</span></p>
                 </div>
                 <div class="text-right">
-                    <span id="count-tractors" class="text-xl font-black font-mono text-[#3b82f6]">0</span>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Machineries</p>
+                    <span id="count-tractors" class="text-xl font-extrabold text-blue-400">0</span>
+                    <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Machineries</p>
                 </div>
             </div>
 
-            <!-- Rice Commodity Component -->
-            <div class="bg-[#0f172a] border border-[#1e293b] rounded-xl p-4 flex items-center justify-between">
+            <!-- Rice Bags -->
+            <div class="bg-[#0d131f] rounded-lg p-4 border border-[#1e293b] flex justify-between items-center">
                 <div>
-                    <h3 class="text-xs font-bold text-[#eab308] mb-1">50kg Imported Bags of Rice</h3>
-                    <p id="label-rice-price" class="text-gray-500 text-[11px] font-mono">Unit Price: D2,500</p>
+                    <h3 class="text-sm font-bold text-amber-500">50kg Imported Bags of Rice</h3>
+                    <p class="text-gray-500 text-[11px] mt-0.5">Unit Price: <span id="label-price-rice">D2,500</span></p>
                 </div>
                 <div class="text-right">
-                    <span id="count-rice" class="text-xl font-black font-mono text-[#eab308]">0</span>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Bags</p>
+                    <span id="count-rice" class="text-xl font-extrabold text-amber-500">0</span>
+                    <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Bags</p>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- 6. Social Accountability Share Platform -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-12">
+        <button onclick="copyShareText('whatsapp')" class="bg-[#064e3b] hover:bg-[#065f46] text-green-300 border border-green-800 rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
+            Copy WhatsApp Report
+        </button>
+        <button onclick="copyShareText('x')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-white border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
+            Copy X Timeline Post
+        </button>
+    </div>
+
+    <!-- Core State & Logic Engine -->
+    <script>
+        let currentCurrency = 'GMD';
