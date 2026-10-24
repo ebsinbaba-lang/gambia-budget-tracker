@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gambia Civic Opportunity Cost Calculator</title>
-    <!-- Tailwind CSS (Fixed and complete file destination) -->
+    <!-- Tailwind CSS framework engine -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased">
@@ -34,6 +34,36 @@
 
         <!-- Main Dashboard Container -->
         <main class="space-y-4">
+
+            <!-- Camera Recognition Simulation Scanning Hub -->
+            <section class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-xl space-y-3">
+                <div>
+                    <h2 class="text-sm font-bold text-gray-300 uppercase tracking-wide flex items-center gap-2">
+                        📷 Live License & Fleet Scanner
+                    </h2>
+                    <p class="text-[11px] text-gray-500 mt-0.5">Select a plate registry category prefix to simulate a barcode scan on the road.</p>
+                </div>
+                
+                <!-- Plate Prefix Selection Matrix Switcher -->
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="simulatePlateScan('GG')" class="bg-gray-950 hover:bg-gray-800 border border-gray-800 text-amber-400 font-black text-xs py-2 px-3 rounded-lg transition-all cursor-pointer">
+                        Scan [GG] Plate
+                    </button>
+                    <button onclick="simulatePlateScan('SG')" class="bg-gray-950 hover:bg-gray-800 border border-gray-800 text-blue-400 font-black text-xs py-2 px-3 rounded-lg transition-all cursor-pointer">
+                        Scan [SG] Plate
+                    </button>
+                    <button onclick="simulatePlateScan('PR')" class="bg-gray-950 hover:bg-gray-800 border border-gray-800 text-cyan-400 font-black text-xs py-2 px-3 rounded-lg transition-all cursor-pointer">
+                        Scan [PR] Plate
+                    </button>
+                </div>
+
+                <!-- Simulated Prompt Notification Overlay Context -->
+                <div id="scannerSimulationOverlay" class="hidden p-3 bg-gray-950 border border-blue-500/40 rounded-lg text-center space-y-1.5">
+                    <p class="text-xs text-gray-300">⏳ <span class="text-blue-400 font-bold">Accessing Plate Reader...</span></p>
+                    <p id="scannerFeedbackText" class="text-[11px] text-gray-400 italic">"Reading registry database..."</p>
+                    <div id="scannerMatchBadge" class="text-[10px] bg-blue-500/10 text-blue-400 p-1 rounded font-mono">Profile loaded!</div>
+                </div>
+            </section>
             
             <!-- Section 1: Vehicle Profile & Inputs -->
             <section class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-xl">
@@ -72,7 +102,7 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-semibold text-gray-400 mb-1">Monthly Fuel <span class="text-[10px] text-gray-500">(Liters/Car)</span></label>
-                            <input type="number" id="fuelLiters" value="450" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-sm">
+                            <input type="number" id="fuelLiters" value="700" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-400 mb-1">Fuel Price <span class="text-[10px] text-gray-500">(GMD/Liter)</span></label>
@@ -115,39 +145,5 @@
 
                 <!-- Resource Cards -->
                 <div class="space-y-3">
-                    <!-- Resource: Tractors for Farmers -->
+                    <!-- Resource: Solar Panels -->
                     <div class="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
-                        <div>
-                            <h4 class="text-sm font-bold text-amber-400">Agricultural Tractors</h4>
-                            <p class="text-[11px] text-gray-500" id="costLabelTractors">Unit Price: D1,750,000</p>
-                        </div>
-                        <div class="text-right">
-                            <span id="tractorsCount" class="text-lg font-black text-emerald-400 block">0</span>
-                            <span class="text-[9px] uppercase tracking-wider font-semibold text-gray-600 block">Tractors</span>
-                        </div>
-                    </div>
-
-                    <!-- Resource 1 -->
-                    <div class="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
-                        <div>
-                            <h4 class="text-sm font-bold text-white">Equipped School Desks</h4>
-                            <p class="text-[11px] text-gray-500" id="costLabelDesks">Unit Price: D2,500</p>
-                        </div>
-                        <div class="text-right">
-                            <span id="desksCount" class="text-lg font-black text-emerald-400 block">0</span>
-                            <span class="text-[9px] uppercase tracking-wider font-semibold text-gray-600 block">Units</span>
-                        </div>
-                    </div>
-
-                    <!-- Resource 2 -->
-                    <div class="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
-                        <div>
-                            <h4 class="text-sm font-bold text-white">Minor Health Clinic Upgrades</h4>
-                            <p class="text-[11px] text-gray-500" id="costLabelClinics">Per Clinic Facility: D600,000</p>
-                        </div>
-                        <div class="text-right">
-                            <span id="clinicsCount" class="text-lg font-black text-emerald-400 block">0</span>
-                            <span class="text-[9px] uppercase tracking-wider font-semibold text-gray-600 block">Facilities</span>
-                        </div>
-                    </div>
-
