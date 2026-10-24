@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Gambian Budget Converter</title>
-    <!-- Tailwind CSS v4 CDN via jsDelivr -->
+    <!-- Fixed Tailwind CSS script tag to allow Javascript execution on mobile devices -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
             background-color: #0d131f;
             color: #f3f4f6;
+        }
+        /* Custom touch styles for smooth mobile scanning */
+        .scanner-slider {
+            touch-action: pan-x;
         }
     </style>
 </head>
@@ -43,33 +47,38 @@
     <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
         <div class="flex items-center gap-2 mb-2">
             <span>📷</span>
-            <h2 class="text-sm font-bold tracking-wider text-white uppercase">Live License & Fleet Scanner</h2>
+            <h2 class="text-sm font-bold tracking-wider text-white uppercase">Interactive Viewfinder Scanner</h2>
         </div>
-        <p class="text-gray-400 text-xs mb-4">Select a plate registry category prefix to simulate a viewfinder capture or convoy scan.</p>
+        <p class="text-gray-400 text-xs mb-4">Drag or slide the amber bar below across the targets to simulate a real roadside camera capture sweep.</p>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-            <button onclick="simulateScan('GG')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-[#eab308] border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
-                Scan [GG] (Executive LC300 V6)
-            </button>
-            <button onclick="simulateScan('NAM')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-green-400 border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
-                Scan [NAM] (National Assembly MP Prado)
-            </button>
-            <button onclick="simulateScan('PR')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-blue-400 border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
-                Scan [PR] (Ministry Nissan Patrol V8)
-            </button>
-            <button onclick="simulateScan('SG')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-indigo-400 border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
-                Scan [SG] (State Guard LC300 V6)
-            </button>
+        <!-- Interactive Viewfinder Slider Container -->
+        <div class="bg-[#0d131f] rounded-xl p-4 border border-[#232f45] mb-4 relative overflow-hidden select-none">
+            <div class="absolute inset-y-0 left-0 right-0 flex justify-between px-6 items-center pointer-events-none opacity-20">
+                <span class="text-xs text-white font-mono">[GG]</span>
+                <span class="text-xs text-white font-mono">[NAM]</span>
+                <span class="text-xs text-white font-mono">[PR]</span>
+                <span class="text-xs text-white font-mono">[SG]</span>
+            </div>
+            
+            <div class="relative w-full h-12 bg-[#161f30]/50 rounded-lg flex items-center border border-[#1e293b]">
+                <input type="range" id="viewfinder-range" min="0" max="100" value="0" oninput="handleScanSlider(this.value)" class="scanner-slider w-full h-full accent-[#eab308] cursor-pointer opacity-80 bg-transparent rounded-lg appearance-none">
+            </div>
         </div>
 
-        <button onclick="simulateConvoy()" class="w-full bg-[#2e1f1d] hover:bg-[#3d2926] text-orange-400 border border-orange-900/50 rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors mb-4 flex items-center justify-center gap-2">
-            💥 Simulate State Convoy Scan (Multi-Plate Sequence)
-        </button>
+        <div class="grid grid-cols-2 gap-2 mb-4">
+            <div class="bg-[#0d131f] rounded-lg p-2 text-center border border-[#1e293b]">
+                <p class="text-[10px] text-gray-400 uppercase font-bold">Slider Mode</p>
+                <p id="slider-status-tag" class="text-xs text-yellow-500 font-bold mt-0.5">Ready to Swipe</p>
+            </div>
+            <button onclick="simulateConvoy()" class="bg-[#2e1f1d] hover:bg-[#3d2926] text-orange-400 border border-orange-900/50 rounded-lg text-xs font-bold text-center transition-colors flex items-center justify-center gap-2">
+                💥 Convoy Sweep
+            </button>
+        </div>
 
         <!-- Viewfinder Log output -->
-        <div class="bg-[#0d131f] rounded-lg p-3 border border-[#1e293b] font-mono text-[11px] text-gray-400 min-h-[40px] flex items-center">
+        <div class="bg-[#0d131f] rounded-lg p-3 border border-[#1e293b] font-mono text-[11px] text-gray-400 min-h-[50px] flex items-center">
             <div id="viewfinder-log" class="w-full">
-                <span class="text-yellow-500 animate-pulse">●</span> Viewfinder passive. Waiting for road asset registration captures...
+                <span class="text-yellow-500 animate-pulse">●</span> Viewfinder passive. Slide the target bar left or right to register convoy logs...
             </div>
         </div>
     </div>
@@ -161,15 +170,5 @@
     </div>
 
     <!-- 6. Social Accountability Share Platform -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-12">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
         <button onclick="copyShareText('whatsapp')" class="bg-[#064e3b] hover:bg-[#065f46] text-green-300 border border-green-800 rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
-            Copy WhatsApp Report
-        </button>
-        <button onclick="copyShareText('x')" class="bg-[#1e293b] hover:bg-[#2d3d54] text-white border border-[#334155] rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
-            Copy X Timeline Post
-        </button>
-    </div>
-
-    <!-- Core State & Logic Engine -->
-    <script>
-        let currentCurrency = 'GMD';
