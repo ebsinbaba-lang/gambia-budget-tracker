@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gambia Civic Opportunity Cost Calculator</title>
+    <!-- Tailwind CSS for modern mobile-first styling -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- Vue.js for real-time reactive slider calculations -->
+    <script src="https://unpkg.com"></script>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased">
+
+    <div id="app" class="max-w-md mx-auto px-4 py-6 pb-24">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-8 border-b border-gray-800 pb-5">
+            <div class="inline-block bg-amber-500/10 text-amber-400 text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider mb-2">
+                Civic Data Transparency Tool
+            </div>
+            <h1 class="text-2xl font-black tracking-tight text-white mb-1">The Gambian Budget Converter</h1>
+            <p class="text-xs text-gray-400">Comparing luxury state assets against essential public services.</p>
+        </header>
+
+        <!-- Dynamic Control Card -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl mb-6">
+            <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">
+                Select Number of Toyota Land Cruiser 300s:
+            </label>
+            
+            <!-- Big Slider Number Display -->
+            <div class="flex items-baseline justify-between mb-4">
+                <span class="text-5xl font-black text-rose-500 tracking-tight">{{ vehicleCount }}</span>
+                <span class="text-xs text-gray-400 font-medium">LC300 SUV Fleet Size</span>
+            </div>
+
+            <!-- Interactive Slider Input -->
+            <input 
+                type="range" 
+                min="1" 
+                max="100" 
+                v-model.number="vehicleCount" 
+                class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-rose-600 mb-6"
+            >
+
+            <!-- Financial Cost Metrics -->
+            <div class="grid grid-cols-2 gap-3 border-t border-gray-800 pt-4 bg-gray-950/40 p-3 rounded-xl">
+                <div>
+                    <span class="block text-[10px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">Estimated Local Cost</span>
+                    <span class="text-base font-extrabold text-white">D{{ formatNumber(totalDalasiCost) }}</span>
+                    <span class="block text-[10px] text-gray-400 font-medium">Dalasis (CFAO Retail)</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">USD Equivalent</span>
+                    <span class="text-sm font-bold text-gray-300">${{ formatNumber(totalUsdCost) }}</span>
+                    <span class="block text-[10px] text-gray-500 font-medium">@ D68 per Dollar</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Public Goods Output Section -->
+        <div class="space-y-4">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 px-1">
+                With this exact amount, The Gambia could instead fund:
+            </h2>
+
+            <!-- Output Cards Loop -->
+            <div v-for="good in publicGoods" :key="good.name" class="bg-gray-900/60 border border-gray-800/80 rounded-xl p-4 flex items-center gap-4 transition-all duration-300 hover:border-emerald-500/30">
+                <div class="bg-emerald-500/10 text-xl w-12 h-12 rounded-xl flex items-center justify-center text-emerald-400 shrink-0 font-bold border border-emerald-500/20">
+                    {{ good.icon }}
+                </div>
+                <div class="grow min-w-0">
+                    <span class="block text-2xl font-black text-emerald-400 tracking-tight">
+                        {{ formatNumber(Math.floor(totalDalasiCost / good.costDalasi)) }}
+                    </span>
+                    <span class="block text-sm font-bold text-white truncate">{{ good.name }}</span>
+                    <span class="block text-[11px] text-gray-400">Unit value: D{{ formatNumber(good.costDalasi) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Share Bar at Bottom -->
+        <div class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 p-4 max-w-md mx-auto shadow-2xl z-50">
+            <button 
+                @click="copyWhatsAppText"
+                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition duration-200 active:scale-[0.98] text-sm flex items-center justify-center gap-2"
+            >
+                <span>{{ copied ? '✅ Copied to Clipboard!' : '📋 Copy WhatsApp Status Update' }}</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        const { createApp, ref, computed } = Vue;
+
+        createApp({
+            setup() {
+                // Number of luxury SUVs to track
+                const vehicleCount = ref(1);
+                const copied = ref(false);
+
+                // Fixed retail value metrics grounded in official local sourcing
+                const SINGLE_SUV_DALASI = 8500000; // D8.5 Million average retail
+                const EXCHANGE_RATE = 68; 
+
+                const totalDalasiCost = computed(() => vehicleCount.value * SINGLE_SUV_DALASI);
+                const totalUsdCost = computed(() => Math.round(totalDalasiCost.value / EXCHANGE_RATE));
+
+                // Verified development good variables
+                const publicGoods = ref([
+                    { name: 'Clean Water Boreholes', costDalasi: 250000, icon: '🚰' },
+                    { name: 'Emergency Roadside Ambulances', costDalasi: 3100000, icon: '🚑' },
+                    { name: 'School Desk & Bench Sets', costDalasi: 2500, icon: '🪑' },
+                    { name: 'Solar-Powered Rural Health Clinics', costDalasi: 4800000, icon: '🏥' }
+                ]);
+
+                // Simple comma formatter for numbers
+                const formatNumber = (num) => {
+                    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                };
+
+                // Formats and copies a shareable broadcast block for social media growth
+                const copyWhatsAppText = () => {
+                    const boreholes = formatNumber(Math.floor(totalDalasiCost.value / 250000));
+                    const ambulances = formatNumber(Math.floor(totalDalasiCost.value / 3100000));
+                    const desks = formatNumber(Math.floor(totalDalasiCost.value / 2500));
+                    
+                    let text = `🇬🇲 *Gambia Civic Budget Update* 🇬🇲\n\n`;
+                    if (vehicleCount.value === 1) {
+                        text += `The retail cost of *1 luxury Government Toyota LC300 SUV* (~D${formatNumber(totalDalasiCost.value)}) could alternatively fund:\n\n`;
+                    } else {
+                        text += `The retail cost of a fleet of *${vehicleCount.value} Government Toyota LC300 SUVs* (~D${formatNumber(totalDalasiCost.value)}) could alternatively fund:\n\n`;
+                    }
+                    text += `🚰 ${boreholes} Clean Water Boreholes for villages\n`;
+                    text += `🚑 ${ambulances} Emergency Ambulances\n`;
+                    text += `🪑 ${desks} School Desks & Benches for students\n\n`;
+                    text += `See the math yourself and calculate your own budget configurations live at: [PASTE YOUR LIVE LINK HERE]`;
+
+                    navigator.clipboard.writeText(text).then(() => {
+                        copied.value = true;
+                        setTimeout(() => copied.value = false, 2500);
+                    });
+                };
+
+                return {
+                    vehicleCount,
+                    totalDalasiCost,
+                    totalUsdCost,
+                    publicGoods,
+                    formatNumber,
+                    copyWhatsAppText,
+                    copied
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
