@@ -4,155 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Gambian Budget Converter</title>
-    
-    <!-- Mobile Standalone Application Mode Shell -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Gambia Budget">
-    <meta name="theme-color" content="#0b0f19">
-    
-    <!-- Correct Tailwind CSS v4 CDN Framework Engine Link on Line 16 -->
+    <!-- Tailwind CSS v4 CDN via jsDelivr -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { background-color: #0b0f19; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
-        .card { background-color: #111827; border: 1px solid #1f2937; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+        body {
+            background-color: #0d131f;
+            color: #f3f4f6;
+        }
     </style>
 </head>
-<body class="max-w-2xl mx-auto p-4 min-h-screen flex flex-col justify-between">
-    <div>
-        <!-- App Header -->
-        <header class="text-center my-6">
-            <h1 class="text-2xl font-black text-white tracking-tight">The Gambian Budget Converter</h1>
-            <p class="text-gray-400 text-sm mt-1">Comparing luxury state assets against essential public services.</p>
-        </header>
+<body class="p-4 md:p-8 max-w-4xl mx-auto font-sans">
 
-        <!-- Display Currency Matrix -->
-        <div class="card flex justify-between items-center">
+    <!-- Header Section -->
+    <div class="text-center my-8">
+        <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">The Gambian Budget Converter</h1>
+        <p class="text-gray-400 text-sm">Comparing luxury state assets against essential public services.</p>
+    </div>
+
+    <!-- 1. Currency Display Card -->
+    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Display Currency</h3>
-                <p class="text-[11px] text-gray-500">Changes all calculations dynamically below.</p>
+                <h2 class="text-xs font-bold tracking-wider text-gray-400 uppercase mb-1">Display Currency</h2>
+                <p class="text-gray-500 text-xs">Changes all calculations dynamically below.</p>
             </div>
-            <div class="bg-gray-800 p-1 rounded-lg flex space-x-1">
-                <button id="btnGMD" onclick="setCurrency('GMD')" class="px-3 py-1 text-xs font-bold rounded-md bg-amber-500 text-gray-900 transition-all">GMD (D)</button>
-                <button id="btnUSD" onclick="setCurrency('USD')" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all">USD ($)</button>
+            <div class="flex bg-[#0f172a] p-1 rounded-lg border border-[#232f45] self-start sm:self-center">
+                <button id="btn-gmd" onclick="setCurrency('GMD')" class="px-4 py-2 text-xs font-bold rounded-md bg-[#eab308] text-[#0f172a] shadow transition-all duration-200 cursor-pointer">
+                    GMD (D)
+                </button>
+                <button id="btn-usd" onclick="setCurrency('USD')" class="px-4 py-2 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all duration-200 cursor-pointer">
+                    USD ($)
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- Live License & Fleet Scanner Controls -->
-        <div class="card">
-            <h2 class="text-sm font-bold text-white flex items-center mb-1">
-                📷 LIVE LICENSE & FLEET SCANNER
-            </h2>
-            <p class="text-xs text-gray-400 mb-4">Select a plate prefix below to scan a car or a whole convoy on the road.</p>
-            
-            <!-- Real Mobile Viewfinder Box Layout Component -->
-            <div class="relative w-full bg-black rounded-lg overflow-hidden mb-4 border border-gray-800 aspect-video flex flex-col justify-center items-center">
-                <video id="webcamPreview" autoplay playsinline webkit-playsinline class="absolute top-0 left-0 w-full h-full object-cover hidden"></video>
-                <div id="cameraPlaceholder" class="z-10 text-center p-4">
-                    <p class="text-xs text-gray-500 mb-2">Device viewfinder interface is currently passive.</p>
-                    <button onclick="startDeviceCamera()" class="bg-amber-500 text-gray-900 font-bold text-xs py-1.5 px-4 rounded-md transition-all hover:bg-amber-400">
-                        Start Live Camera Viewfinder
-                    </button>
-                </div>
-                <!-- Targeting Sight Box Overlay -->
-                <div class="absolute inset-0 border-2 border-dashed border-amber-500/20 pointer-events-none m-8 rounded flex items-center justify-center">
-                    <div class="w-12 h-0.5 bg-amber-400/40"></div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 mb-3">
-                <button onclick="simulateScan('GG')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-amber-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
-                    Scan [GG] (Executive/Government)
-                </button>
-                <button onclick="simulateScan('NA')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-emerald-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
-                    Scan [NA] (MPs/Parliament)
-                </button>
-                <button onclick="simulateScan('PR')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-blue-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
-                    Scan [PR] (Public Ministries)
-                </button>
-                <button onclick="simulateScan('SG')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-indigo-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
-                    Scan [SG] (State Guard Pickups)
-                </button>
-            </div>
-            
-            <div class="grid grid-cols-1 gap-2 mb-3">
-                <button onclick="simulateScan('SH')" class="w-full bg-gray-800 border border-gray-700 hover:bg-gray-700 text-rose-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
-                    Scan [SH] (State House/President Fleet)
-                </button>
-            </div>
-            
-            <button onclick="simulateConvoy()" class="w-full bg-amber-600/10 border border-amber-500/20 text-amber-300 hover:bg-amber-600/20 font-bold text-xs py-2.5 px-3 rounded-lg transition-all flex items-center justify-center space-x-2">
-                🚨 <span>Scan Official State Convoy (Multi-Car Mix)</span>
+    <!-- 2. Live License & Fleet Scanner Card -->
+    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-sm">📷</span>
+            <h2 class="text-xs font-bold tracking-wider text-gray-200 uppercase">Live License & Fleet Scanner</h2>
+        </div>
+        <p class="text-gray-400 text-xs mb-4">Select a plate registry category prefix to simulate a viewfinder capture or convoy scan.</p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <button onclick="simulateScan('GG')" class="w-full bg-[#1e293b] hover:bg-[#27354d] border border-[#334155] py-3 px-4 rounded-lg font-bold text-xs text-[#eab308] transition duration-200 cursor-pointer text-center">
+                Scan [GG] (Executive/President)
             </button>
-
-            <!-- Scanner Log Area -->
-            <div id="scannerFeed" class="mt-3 bg-black/40 border border-gray-800 rounded-lg p-2.5 font-mono text-[11px] text-gray-400 min-h-[52px] flex flex-col justify-center">
-                <div class="flex items-center text-gray-500">
-                    <span class="animate-pulse mr-1.5 text-amber-500">●</span> Scanner system initialized...
-                </div>
-            </div>
+            <button onclick="simulateScan('NA')" class="w-full bg-[#1e293b] hover:bg-[#27354d] border border-[#334155] py-3 px-4 rounded-lg font-bold text-xs text-[#22c55e] transition duration-200 cursor-pointer text-center">
+                Scan [NA] (Parliament/MPs)
+            </button>
+            <button onclick="simulateScan('PR')" class="w-full bg-[#1e293b] hover:bg-[#27354d] border border-[#334155] py-3 px-4 rounded-lg font-bold text-xs text-[#3b82f6] transition duration-200 cursor-pointer text-center">
+                Scan [PR] (Public Ministries)
+            </button>
+            <button onclick="simulateScan('SG')" class="w-full bg-[#1e293b] hover:bg-[#27354d] border border-[#334155] py-3 px-4 rounded-lg font-bold text-xs text-[#6366f1] transition duration-200 cursor-pointer text-center">
+                Scan [SG] (State Guard Pickups)
+            </button>
         </div>
 
-        <!-- Metric Inputs -->
-        <div class="card">
-            <h2 class="text-sm font-bold text-white mb-1">🚗 RECALCULATION SETTINGS</h2>
-            <div class="grid grid-cols-2 gap-3 mt-3">
+        <button onclick="simulateConvoy()" class="w-full bg-[#271d18] hover:bg-[#382820] border border-[#b45309] text-[#f43f5e] font-bold text-xs py-3 px-4 rounded-lg transition duration-200 mb-4 cursor-pointer text-center flex items-center justify-center gap-1">
+            <span>🚨</span> Simulate State Convoy Scan (Multi-Plate Sequence)
+        </button>
+
+        <!-- Dynamic Camera Viewfinder Box -->
+        <div class="bg-[#0f172a] border border-[#1e293b] rounded-lg p-4 flex flex-col justify-center min-h-[70px]">
+            <div class="flex items-center gap-2 mb-2">
+                <button id="camera-toggle-btn" onclick="toggleCamera()" class="px-3 py-1 bg-[#1e293b] text-gray-300 hover:text-white border border-[#334155] text-[10px] font-bold rounded cursor-pointer transition">
+                    Start Camera Feed
+                </button>
+                <div id="camera-dot" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
+                <div id="camera-status" class="text-[11px] text-gray-400 font-mono">Viewfinder passive. Waiting for road asset registration captures...</div>
+            </div>
+            <div id="viewfinder-feed" class="text-xs font-mono text-[#22c55e] hidden bg-black/40 p-2 rounded border border-emerald-900/30 max-h-[120px] overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <!-- 3. Metric Filter Inputs -->
+    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
+        <div class="flex items-center gap-2 mb-4">
+            <span class="text-sm">🚒</span>
+            <h2 class="text-xs font-bold tracking-wider text-gray-200 uppercase">Baseline Metric Filters</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Vehicle Life Expectancy (Years)</label>
+                <input type="number" id="input-lifespan" value="5" min="1" oninput="recalculateAll()" class="w-full bg-[#0f172a] border border-[#232f45] rounded-lg py-2 px-3 text-sm text-white font-mono focus:outline-none focus:border-gray-500">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Pump Fuel Baseline (D/L)</label>
+                <input type="number" id="input-fuel" value="120" min="0" oninput="recalculateAll()" class="w-full bg-[#0f172a] border border-[#232f45] rounded-lg py-2 px-3 text-sm text-white font-mono focus:outline-none focus:border-gray-500">
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Total Cumulative Cost Output -->
+    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xs font-bold tracking-wider text-amber-500 uppercase">Total Cumulative Fleet Cost</h2>
+            <span class="text-[10px] font-semibold bg-[#2e2216] text-[#eab308] border border-[#78350f] rounded px-2 py-0.5 uppercase tracking-wide">Annualized</span>
+        </div>
+        <div id="display-total-cost" class="text-3xl font-black font-mono text-white mb-6">D0.00</div>
+
+        <div class="border-t border-[#232f45] pt-4">
+            <div class="flex items-center gap-2 mb-3 text-xs font-bold text-gray-300">
+                <span>📋</span> Compiled Unique Fleet Inventory Track:
+            </div>
+            <div id="fleet-list-container" class="text-xs text-gray-500 font-mono italic">
+                No plates registered in active stack. Use scanner controls above.
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Alternative Civic Value Layout -->
+    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
+        <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm">💡</span>
+            <h2 class="text-xs font-bold tracking-wider text-gray-200 uppercase">Alternative Civic Value</h2>
+        </div>
+        <p class="text-gray-400 text-xs mb-6">Instead of maintaining this scanned luxury fleet budget, the public sector could fund:</p>
+
+        <!-- Matrix Cards Container -->
+        <div class="space-y-3">
+            <!-- AC Array Component -->
+            <div class="bg-[#0f172a] border border-[#1e293b] rounded-xl p-4 flex items-center justify-between">
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wide">Vehicle Lifespan (Years)</label>
-                    <input type="number" id="inputAmortization" value="5" oninput="recalculateImpactMetrics()" class="w-full bg-gray-950 border border-gray-800 rounded px-2.5 py-1.5 text-xs text-white mt-1 focus:border-amber-500 outline-none">
+                    <h3 class="text-xs font-bold text-[#22c55e] mb-1">School & Clinic AC Appliances</h3>
+                    <p id="label-ac-price" class="text-gray-500 text-[11px] font-mono">Unit Price: D35,000</p>
                 </div>
+                <div class="text-right">
+                    <span id="count-ac" class="text-xl font-black font-mono text-[#22c55e]">0</span>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Units</p>
+                </div>
+            </div>
+
+            <!-- Heavy Duty Tractor Component -->
+            <div class="bg-[#0f172a] border border-[#1e293b] rounded-xl p-4 flex items-center justify-between">
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wide">Pump Fuel Baseline (D/L)</label>
-                    <input type="number" id="inputFuelPrice" value="120" oninput="recalculateImpactMetrics()" class="w-full bg-gray-950 border border-gray-800 rounded px-2.5 py-1.5 text-xs text-white mt-1 focus:border-amber-500 outline-none">
+                    <h3 class="text-xs font-bold text-[#3b82f6] mb-1">Heavy-Duty Farming Tractors</h3>
+                    <p id="label-tractor-price" class="text-gray-500 text-[11px] font-mono">Unit Price: D1,750,000</p>
+                </div>
+                <div class="text-right">
+                    <span id="count-tractors" class="text-xl font-black font-mono text-[#3b82f6]">0</span>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Machineries</p>
+                </div>
+            </div>
+
+            <!-- Rice Commodity Component -->
+            <div class="bg-[#0f172a] border border-[#1e293b] rounded-xl p-4 flex items-center justify-between">
+                <div>
+                    <h3 class="text-xs font-bold text-[#eab308] mb-1">50kg Imported Bags of Rice</h3>
+                    <p id="label-rice-price" class="text-gray-500 text-[11px] font-mono">Unit Price: D2,500</p>
+                </div>
+                <div class="text-right">
+                    <span id="count-rice" class="text-xl font-black font-mono text-[#eab308]">0</span>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Bags</p>
                 </div>
             </div>
         </div>
-
-        <!-- Cost Display Area -->
-        <div class="card border-amber-500/20 bg-gradient-to-b from-gray-900 to-amber-950/5">
-            <div class="flex justify-between items-start">
-                <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Total Scanned Fleet Cost</h2>
-                <span class="text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20 font-semibold">Annualized</span>
-            </div>
-            <div class="text-3xl font-black text-white mt-1 mb-4" id="displayTotalCost">D0.00</div>
-
-            <div class="border-t border-gray-800 pt-3">
-                <h3 class="text-xs font-bold text-gray-300 mb-2">📋 Scanned Fleet List (No Duplicates):</h3>
-                <div id="fleetRegistryList" class="space-y-1.5 text-xs text-gray-400">
-                    <div class="text-gray-500 italic py-1">No plates scanned yet. Click a button above to test.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Alternative Civic Resource Grid -->
-        <div class="card">
-            <h2 class="text-sm font-bold text-white mb-1">💡 ALTERNATIVE CIVIC VALUE</h2>
-            <p class="text-xs text-gray-400 mb-4">Instead of spending money on this fleet, the Gambian government could buy:</p>
-
-            <div class="space-y-3">
-                <!-- Air Conditioners -->
-                <div class="bg-gray-950/40 border border-gray-800 rounded-lg p-3 flex justify-between items-center">
-                    <div>
-                        <h4 class="text-xs font-bold text-emerald-400">School & Clinic AC Units</h4>
-                        <p class="text-[11px] text-gray-500" id="priceAC">Unit Price: D35,000</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-lg font-black text-emerald-400" id="countAC">0</span>
-                        <span class="text-[10px] block font-bold text-gray-500 tracking-wide uppercase">Units</span>
-                    </div>
-                </div>
-
-                <!-- Agricultural Tractors -->
-                <div class="bg-gray-950/40 border border-gray-800 rounded-lg p-3 flex justify-between items-center">
-                    <div>
-                        <h4 class="text-xs font-bold text-blue-400">Agricultural Tractors for Farmers</h4>
-                        <p class="text-[11px] text-gray-500" id="priceTractor">Unit Price: D1,750,000</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-lg font-black text-blue-400" id="countTractor">0</span>
-                        <span class="text-[10px] block font-bold text-gray-500 tracking-wide uppercase">Tractors</span>
-                    </div>
-                </div>
-
-                <!-- 50kg Rice Bags -->
