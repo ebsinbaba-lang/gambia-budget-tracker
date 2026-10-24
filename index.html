@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Gambian Budget Converter</title>
-    <!-- Tailwind CSS v4 CDN Framework -->
+    
+    <!-- Mobile PWA Download Manifest Configurations -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0b0f19">
+    
+    <!-- Correct Tailwind CSS v4 CDN Framework on Line 8 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body { background-color: #0b0f19; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
@@ -13,13 +20,13 @@
 </head>
 <body class="max-w-2xl mx-auto p-4 min-h-screen flex flex-col justify-between">
     <div>
-        <!-- App Title Header Section -->
+        <!-- App Header -->
         <header class="text-center my-6">
             <h1 class="text-2xl font-black text-white tracking-tight">The Gambian Budget Converter</h1>
             <p class="text-gray-400 text-sm mt-1">Comparing luxury state assets against essential public services.</p>
         </header>
 
-        <!-- Display Currency Selector Matrix -->
+        <!-- Display Currency Matrix -->
         <div class="card flex justify-between items-center">
             <div>
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Display Currency</h3>
@@ -31,46 +38,52 @@
             </div>
         </div>
 
-        <!-- Camera Scanner Feed Simulation Controller Viewport -->
+        <!-- Live License & Fleet Scanner Controls -->
         <div class="card">
             <h2 class="text-sm font-bold text-white flex items-center mb-1">
                 📷 LIVE LICENSE & FLEET SCANNER
             </h2>
-            <p class="text-xs text-gray-400 mb-4">Select a plate registry category prefix to simulate a viewfinder capture or convoy scan.</p>
+            <p class="text-xs text-gray-400 mb-4">Select a plate prefix below to scan a car or a whole convoy on the road.</p>
             
             <div class="grid grid-cols-2 gap-2 mb-3">
-                <button onclick="simulateScan('GG')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-amber-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all active:scale-95">
-                    Scan [GG] (Executive/President)
+                <button onclick="simulateScan('GG')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-amber-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
+                    Scan [GG] (Executive/Government)
                 </button>
-                <button onclick="simulateScan('NA')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-emerald-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all active:scale-95">
-                    Scan [NA] (Parliament/MPs)
+                <button onclick="simulateScan('NA')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-emerald-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
+                    Scan [NA] (MPs/Parliament)
                 </button>
-                <button onclick="simulateScan('PR')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-blue-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all active:scale-95">
+                <button onclick="simulateScan('PR')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-blue-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
                     Scan [PR] (Public Ministries)
                 </button>
-                <button onclick="simulateScan('SG')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-indigo-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all active:scale-95">
+                <button onclick="simulateScan('SG')" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-indigo-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
                     Scan [SG] (State Guard Pickups)
                 </button>
             </div>
             
+            <div class="grid grid-cols-1 gap-2 mb-3">
+                <button onclick="simulateScan('SH')" class="w-full bg-gray-800 border border-gray-700 hover:bg-gray-700 text-rose-400 font-extrabold text-xs py-2 px-3 rounded-lg transition-all">
+                    Scan [SH] (State House/President Fleet)
+                </button>
+            </div>
+            
             <button onclick="simulateConvoy()" class="w-full bg-amber-600/10 border border-amber-500/20 text-amber-300 hover:bg-amber-600/20 font-bold text-xs py-2.5 px-3 rounded-lg transition-all flex items-center justify-center space-x-2">
-                🚨 <span>Simulate State Convoy Scan (Multi-Plate Sequence)</span>
+                🚨 <span>Scan Official State Convoy (Multi-Car Mix)</span>
             </button>
 
-            <!-- OCR Telemetry Output Logs Display -->
+            <!-- Scanner Log Area -->
             <div id="scannerFeed" class="mt-3 bg-black/40 border border-gray-800 rounded-lg p-2.5 font-mono text-[11px] text-gray-400 min-h-[52px] flex flex-col justify-center">
                 <div class="flex items-center text-gray-500">
-                    <span class="animate-pulse mr-1.5 text-amber-500">●</span> Viewfinder passive. Waiting for road asset registration captures...
+                    <span class="animate-pulse mr-1.5 text-amber-500">●</span> Scanner active. Waiting for vehicle plates...
                 </div>
             </div>
         </div>
 
-        <!-- Metric Size & Fuel Parameter Context Form Layout -->
+        <!-- Metric Inputs -->
         <div class="card">
-            <h2 class="text-sm font-bold text-white mb-1">🚗 BASELINE METRIC FILTERS</h2>
+            <h2 class="text-sm font-bold text-white mb-1">🚗 RECALCULATION SETTINGS</h2>
             <div class="grid grid-cols-2 gap-3 mt-3">
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wide">Vehicle Life Expectancy</label>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wide">Vehicle Lifespan (Years)</label>
                     <input type="number" id="inputAmortization" value="5" oninput="recalculateImpactMetrics()" class="w-full bg-gray-950 border border-gray-800 rounded px-2.5 py-1.5 text-xs text-white mt-1 focus:border-amber-500 outline-none">
                 </div>
                 <div>
@@ -80,32 +93,32 @@
             </div>
         </div>
 
-        <!-- Scanned Fleet Total Calculation Cost Board -->
+        <!-- Cost Display Area -->
         <div class="card border-amber-500/20 bg-gradient-to-b from-gray-900 to-amber-950/5">
             <div class="flex justify-between items-start">
-                <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Total Cumulative Fleet Cost</h2>
+                <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Total Scanned Fleet Cost</h2>
                 <span class="text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20 font-semibold">Annualized</span>
             </div>
             <div class="text-3xl font-black text-white mt-1 mb-4" id="displayTotalCost">D0.00</div>
 
             <div class="border-t border-gray-800 pt-3">
-                <h3 class="text-xs font-bold text-gray-300 mb-2">📋 Compiled Unique Fleet Inventory Track:</h3>
+                <h3 class="text-xs font-bold text-gray-300 mb-2">📋 Scanned Fleet List (No Duplicates):</h3>
                 <div id="fleetRegistryList" class="space-y-1.5 text-xs text-gray-400">
-                    <div class="text-gray-500 italic py-1">No plates registered in active stack. Use scanner controls above.</div>
+                    <div class="text-gray-500 italic py-1">No plates scanned yet. Click a button above to test.</div>
                 </div>
             </div>
         </div>
 
-        <!-- Alternative Civic Resource Comparison Matrix -->
+        <!-- Alternative Civic Resource Grid -->
         <div class="card">
             <h2 class="text-sm font-bold text-white mb-1">💡 ALTERNATIVE CIVIC VALUE</h2>
-            <p class="text-xs text-gray-400 mb-4">Instead of maintaining this scanned luxury fleet budget, the public sector could fund:</p>
+            <p class="text-xs text-gray-400 mb-4">Instead of spending money on this fleet, the Gambian government could buy:</p>
 
             <div class="space-y-3">
                 <!-- Air Conditioners -->
                 <div class="bg-gray-950/40 border border-gray-800 rounded-lg p-3 flex justify-between items-center">
                     <div>
-                        <h4 class="text-xs font-bold text-emerald-400">School & Clinic AC Appliances</h4>
+                        <h4 class="text-xs font-bold text-emerald-400">School & Clinic AC Units</h4>
                         <p class="text-[11px] text-gray-500" id="priceAC">Unit Price: D35,000</p>
                     </div>
                     <div class="text-right">
@@ -117,19 +130,19 @@
                 <!-- Agricultural Tractors -->
                 <div class="bg-gray-950/40 border border-gray-800 rounded-lg p-3 flex justify-between items-center">
                     <div>
-                        <h4 class="text-xs font-bold text-blue-400">Heavy-Duty Farming Tractors</h4>
+                        <h4 class="text-xs font-bold text-blue-400">Agricultural Tractors for Farmers</h4>
                         <p class="text-[11px] text-gray-500" id="priceTractor">Unit Price: D1,750,000</p>
                     </div>
                     <div class="text-right">
                         <span class="text-lg font-black text-blue-400" id="countTractor">0</span>
-                        <span class="text-[10px] block font-bold text-gray-500 tracking-wide uppercase">Machineries</span>
+                        <span class="text-[10px] block font-bold text-gray-500 tracking-wide uppercase">Tractors</span>
                     </div>
                 </div>
 
                 <!-- 50kg Rice Bags -->
                 <div class="bg-gray-950/40 border border-gray-800 rounded-lg p-3 flex justify-between items-center">
                     <div>
-                        <h4 class="text-xs font-bold text-amber-400">50kg Imported Bags of Rice</h4>
+                        <h4 class="text-xs font-bold text-amber-400">50kg Bags of Rice</h4>
                         <p class="text-[11px] text-gray-500" id="priceRice">Unit Price: D2,500</p>
                     </div>
                     <div class="text-right">
@@ -140,14 +153,10 @@
             </div>
         </div>
 
-        <!-- Share Broadcasting Tracing Module -->
+        <!-- Social Share Module -->
         <div class="card border-dashed border-gray-800 bg-transparent flex flex-col space-y-2">
-            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Social Accountability Share Platform</h3>
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Share This Report</h3>
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="copyToClipboard('whatsapp')" class="bg-green-600/10 hover:bg-green-600/20 text-green-400 border border-green-500/20 py-2 px-3 rounded-lg text-xs font-bold transition-all">
-                    Copy WhatsApp Report
+                    Copy WhatsApp Message
                 </button>
-                <button onclick="copyToClipboard('x')" class="bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 py-2 px-3 rounded-lg text-xs font-bold transition-all">
-                    Copy X Timeline Post
-                </button>
-            </div>
