@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gambia Civic Opportunity Cost Calculator</title>
     <!-- Tailwind CSS (Fixed and complete file destination) -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://jsdelivr.net"></script>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased">
 
@@ -115,6 +115,18 @@
 
                 <!-- Resource Cards -->
                 <div class="space-y-3">
+                    <!-- Resource: Tractors for Farmers -->
+                    <div class="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
+                        <div>
+                            <h4 class="text-sm font-bold text-amber-400">Agricultural Tractors</h4>
+                            <p class="text-[11px] text-gray-500" id="costLabelTractors">Unit Price: D1,750,000</p>
+                        </div>
+                        <div class="text-right">
+                            <span id="tractorsCount" class="text-lg font-black text-emerald-400 block">0</span>
+                            <span class="text-[9px] uppercase tracking-wider font-semibold text-gray-600 block">Tractors</span>
+                        </div>
+                    </div>
+
                     <!-- Resource 1 -->
                     <div class="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
                         <div>
@@ -139,15 +151,3 @@
                         </div>
                     </div>
 
-                    <!-- Resource 3 -->
-                    <div class="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
-                        <div>
-                            <h4 class="text-sm font-bold text-white">Student Annual Hot Meals</h4>
-                            <p class="text-[11px] text-gray-500" id="costLabelMeals">Per Student/Year: D4,000</p>
-                        </div>
-                        <div class="text-right">
-                            <span id="mealsCount" class="text-lg font-black text-emerald-400 block">0</span>
-                            <span class="text-[9px] uppercase tracking-wider font-semibold text-gray-600 block">Students</span>
-                        </div>
-                    </div>
-                </div>
