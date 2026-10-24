@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gambia Civic Opportunity Cost Calculator</title>
-    <!-- Tailwind CSS framework engine -->
+    <!-- Tailwind CSS (Fixed and complete file destination) -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased">
@@ -45,7 +45,7 @@
                 </div>
                 
                 <!-- Plate Prefix Selection Matrix Switcher -->
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-2 gap-2">
                     <button onclick="simulatePlateScan('GG')" class="bg-gray-950 hover:bg-gray-800 border border-gray-800 text-amber-400 font-black text-xs py-2 px-3 rounded-lg transition-all cursor-pointer">
                         Scan [GG] Plate
                     </button>
@@ -55,10 +55,13 @@
                     <button onclick="simulatePlateScan('PR')" class="bg-gray-950 hover:bg-gray-800 border border-gray-800 text-cyan-400 font-black text-xs py-2 px-3 rounded-lg transition-all cursor-pointer">
                         Scan [PR] Plate
                     </button>
+                    <button onclick="simulatePlateScan('NA')" class="bg-gray-950 hover:bg-gray-800 border border-gray-800 text-emerald-400 font-black text-xs py-2 px-3 rounded-lg transition-all cursor-pointer">
+                        Scan [NA] Plate
+                    </button>
                 </div>
 
                 <!-- Simulated Prompt Notification Overlay Context -->
-                <div id="scannerSimulationOverlay" class="hidden p-3 bg-gray-950 border border-blue-500/40 rounded-lg text-center space-y-1.5">
+                <div id="scannerSimulationOverlay" class="hidden p-3 bg-gray-950 border border-blue-500/40 rounded-lg text-center space-y-1">
                     <p class="text-xs text-gray-300">⏳ <span class="text-blue-400 font-bold">Accessing Plate Reader...</span></p>
                     <p id="scannerFeedbackText" class="text-[11px] text-gray-400 italic">"Reading registry database..."</p>
                     <div id="scannerMatchBadge" class="text-[10px] bg-blue-500/10 text-blue-400 p-1 rounded font-mono">Profile loaded!</div>
@@ -69,45 +72,25 @@
             <section class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-xl">
                 <div class="mb-4">
                     <h2 class="text-sm font-bold text-gray-300 uppercase tracking-wide flex items-center gap-2">
-                        🚗 Government Fleet Inputs
+                        🚗 Fleet Size Context
                     </h2>
-                    <p class="text-[11px] text-gray-500 mt-0.5">Select a vehicle preset profile or edit manually.</p>
+                    <p class="text-[11px] text-gray-500 mt-0.5">Determine how many vehicles are in this active registry pool.</p>
                 </div>
                 
                 <div class="space-y-4">
-                    <!-- Fleet Profile Switcher Selection -->
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-400 mb-1">Quick Fleet Preset</label>
-                        <select id="vehiclePreset" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-sm">
-                            <option value="custom">Custom (Manual Entry)</option>
-                            <option value="luxury" selected>Luxury Executive SUV (V8 Land Cruiser style) - $85,000</option>
-                            <option value="midrange">Standard Ministry Sedan (Passat style) - $35,000</option>
-                            <option value="utility">Utility Pickup Truck (Hilux style) - $45,000</option>
-                        </select>
-                    </div>
+                    <!-- Hidden operational variables container mapping preset calculations internally -->
+                    <input type="hidden" id="vehiclePreset" value="luxury">
+                    <input type="hidden" id="vehicleCost" value="85000">
+                    <input type="hidden" id="fuelLiters" value="700">
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 mb-1">Estimated Fleet Size (Vehicles)</label>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Calculated Fleet Pool Size (Vehicles)</label>
                         <input type="number" id="fleetSize" value="50" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-sm">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 mb-1">Average Purchase Cost per Vehicle (USD)</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-2 text-sm text-gray-500">$</span>
-                            <input type="number" id="vehicleCost" value="85000" class="w-full bg-gray-950 border border-gray-800 rounded-lg pl-7 pr-3 py-2 text-white focus:outline-none focus:border-amber-500 text-sm">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1">Monthly Fuel <span class="text-[10px] text-gray-500">(Liters/Car)</span></label>
-                            <input type="number" id="fuelLiters" value="700" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1">Fuel Price <span class="text-[10px] text-gray-500">(GMD/Liter)</span></label>
-                            <input type="number" id="fuelPriceGMD" value="120" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-sm">
-                        </div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Pump Fuel Price Baseline <span class="text-[10px] text-gray-500">(GMD/Liter)</span></label>
+                        <input type="number" id="fuelPriceGMD" value="120" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-sm">
                     </div>
                 </div>
             </section>
@@ -122,14 +105,16 @@
                     D0.00
                 </div>
                 
-                <!-- Explicit Breakdown Breakdown Helper Text for Transparency -->
+                <!-- Explicit Breakdown Traced Fields Displaying Values After Scanning -->
                 <div class="mt-3 pt-3 border-t border-gray-800 text-[11px] text-gray-400 space-y-1.5">
                     <p class="leading-relaxed">
-                        💡 <strong class="text-gray-200">How is this counted?</strong> Vehicles are asset purchases spread over a standard <span class="text-amber-400 font-semibold">5-year useful life</span> plus live fuel consumption tracking metrics.
+                        📋 <strong class="text-gray-200">Scanned Vehicle Footprint Summary:</strong>
                     </p>
-                    <div class="grid grid-cols-2 gap-2 text-[10px] pt-1 text-gray-500">
-                        <div>• Fleet Amortization: <span id="breakdownAsset" class="text-gray-400 font-medium">D0</span></div>
-                        <div>• Live Annual Fuel: <span id="breakdownFuel" class="text-gray-400 font-medium">D0</span></div>
+                    <div class="grid grid-cols-1 gap-1 text-[11px] pt-0.5 text-gray-400 space-y-0.5">
+                        <div>• Vehicle Original Class Price: <span id="outputScannedPrice" class="text-amber-400 font-bold">Loading...</span></div>
+                        <div>• Est. Monthly Fuel Footprint: <span id="outputScannedFuel" class="text-amber-400 font-bold">Loading...</span></div>
+                        <div class="text-[10px] text-gray-500 pt-1 border-t border-gray-900/50">• Combined Pool Amortization: <span id="breakdownAsset" class="text-gray-400">D0</span></div>
+                        <div>• Combined Pool Fuel Cost: <span id="breakdownFuel" class="text-gray-400">D0</span></div>
                     </div>
                 </div>
             </section>
@@ -143,7 +128,23 @@
                     <p class="text-xs text-gray-400 mt-0.5">Instead of maintaining this fleet budget, the country could fund:</p>
                 </div>
 
-                <!-- Resource Cards -->
+                <!-- Resource Cards Container Stack -->
                 <div class="space-y-3">
                     <!-- Resource: Solar Panels -->
                     <div class="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
+                        <div>
+                            <h4 class="text-sm font-bold text-sky-400">Public Solar Panels</h4>
+                            <p class="text-[11px] text-gray-500" id="costLabelSolar">Unit Price: D14,000</p>
+                        </div>
+                        <div class="text-right">
+                            <span id="solarCount" class="text-lg font-black text-emerald-400 block">0</span>
+                            <span class="text-[9px] uppercase tracking-wider font-semibold text-gray-600 block">Panels</span>
+                        </div>
+                    </div>
+
+                    <!-- Resource: School/Clinic Air Conditioners -->
+                    <div class="flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg">
+                        <div>
+                            <h4 class="text-sm font-bold text-cyan-400">School/Clinic AC Units</h4>
+                            <p class="text-[11px] text-gray-500" id="costLabelAC">Unit Price: D35,000</p>
+                        </div>
