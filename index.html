@@ -1,174 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Gambian Budget Converter</title>
-    <!-- Fixed Tailwind CSS script tag to allow Javascript execution on mobile devices -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        body {
-            background-color: #0d131f;
-            color: #f3f4f6;
-        }
-        .scanner-slider {
-            touch-action: pan-x;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gambia Vehicle Accountability App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #f8f9fa; color: #333; display: flex; justify-content: center; }
+    .phone-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+    
+    /* Header Navbar */
+    .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f3f5; }
+    .header h1 { font-size: 28px; font-weight: 700; color: #111; }
+    .header-icons { font-size: 22px; cursor: pointer; display: flex; gap: 15px; }
+
+    /* History Feed */
+    .history-feed { padding: 15px; flex-grow: 1; overflow-y: auto; padding-bottom: 100px; }
+    .history-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f8f9fa; align-items: center; }
+    .car-thumb { width: 70px; height: 70px; background: #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 1px solid #dee2e6; color: #495057; text-align: center; }
+    .item-details { flex-grow: 1; }
+    .item-title { font-weight: 600; font-size: 16px; margin-bottom: 2px; }
+    .item-subtitle { color: #6c757d; font-size: 14px; margin-bottom: 6px; }
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .dot-red { background: #fa5252; } .dot-orange { background: #fd7e14; } .dot-green { background: #40c057; }
+    .time-stamp { color: #adb5bd; font-size: 12px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+
+    /* Sticky Scan Button */
+    .scan-btn { position: fixed; bottom: 85px; right: 20px; background: #37b24d; color: white; padding: 14px 24px; border-radius: 30px; font-weight: 600; font-size: 16px; border: none; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 8px 16px rgba(55,178,77,0.3); z-index: 10; }
+
+    /* Bottom Navigation Bar */
+    .nav-bar { position: sticky; bottom: 0; background: white; border-top: 1px solid #efefef; display: flex; justify-content: space-around; padding: 12px 0; font-size: 12px; color: #868e96; z-index: 9; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
+    .nav-item.active { color: #e8590c; font-weight: 600; }
+
+    /* Modals */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
+    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+    .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 15px; display: flex; justify-content: space-between; }
+    .close-modal { cursor: pointer; color: #adb5bd; }
+    .input-field { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
+    .submit-btn { width: 100%; background: #212529; color: white; padding: 14px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; font-size: 16px; }
+    
+    /* Metrics Display */
+    .report-card { background: #f1f3f5; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 14px; }
+    .report-title { font-weight: bold; border-bottom: 1px solid #dee2e6; padding-bottom: 5px; margin-bottom: 10px; }
+    .report-line { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .equiv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+    .equiv-box { background: #e8f7ff; border: 1px solid #bbeeec; padding: 12px; border-radius: 8px; text-align: center; }
+    .equiv-val { font-size: 18px; font-weight: 700; color: #1c7ed6; }
+    .equiv-lbl { font-size: 11px; color: #495057; margin-top: 2px; }
+
+    /* Share Actions */
+    .share-row { display: flex; gap: 10px; margin-top: 15px; }
+    .share-btn { flex: 1; padding: 10px; border-radius: 6px; border: none; font-weight: 600; font-size: 13px; color: white; cursor: pointer; text-align: center; text-decoration: none; }
+    .wa-btn { background: #25D366; } .fb-btn { background: #1877F2; } .tt-btn { background: #010101; }
+  </style>
 </head>
-<body class="p-4 md:p-8 max-w-4xl mx-auto font-sans">
+<body>
 
-    <!-- Header Section -->
-    <div class="text-center my-8">
-        <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">The Gambian Budget Converter</h1>
-        <p class="text-gray-400 text-sm">Comparing luxury state assets against essential public services and healthcare.</p>
+<div class="phone-container">
+  <div class="header">
+    <h1>History</h1>
+    <div class="header-icons"><span>★</span><span>⋮</span></div>
+  </div>
+
+  <div class="history-feed" id="historyFeed">
+    <div class="history-item">
+      <div class="car-thumb">GG</div>
+      <div class="item-details">
+        <div class="item-title">GG 0058 A</div>
+        <div class="item-subtitle">Toyota Land Cruiser 300 VXR</div>
+        <div class="status-badge"><span class="status-dot dot-red"></span>High Impact Expenses</div>
+        <div class="time-stamp">⏱ 4 hours ago</div>
+      </div>
     </div>
+  </div>
 
-    <!-- 1. Currency Display Card -->
-    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                <h2 class="text-xs font-bold tracking-wider text-gray-400 uppercase mb-1">Display Currency</h2>
-                <p class="text-gray-500 text-xs">Changes all calculations dynamically below.</p>
-            </div>
-            <div class="inline-flex rounded-lg p-1 bg-[#0d131f]">
-                <button id="btn-gmd" onclick="setCurrency('GMD')" class="px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-[#eab308] text-[#0d131f]">
-                    GMD (D)
-                </button>
-                <button id="btn-usd" onclick="setCurrency('USD')" class="px-4 py-1.5 rounded-md text-xs font-bold transition-all text-gray-400 hover:text-white">
-                    USD ($)
-                </button>
-            </div>
-        </div>
+  <button class="scan-btn" onclick="openScanModal()">Scan Plate</button>
+
+  <div class="nav-bar">
+    <div class="nav-item active"><span>History</span></div>
+    <div class="nav-item"><span>Recs</span></div>
+    <div class="nav-item"><span>Overview</span></div>
+  </div>
+</div>
+
+<!-- Modal 1: Input Scanner Prompt -->
+<div class="modal" id="scanModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span>Scan Official Plate</span>
+      <span class="close-modal" onclick="closeModal('scanModal')">&times;</span>
     </div>
+    <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A">
+    <button class="submit-btn" onclick="submitScan()">Analyze Asset Spending</button>
+  </div>
+</div>
 
-    <!-- 2. Live License & Fleet Scanner Card -->
-    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
-        <div class="flex items-center gap-2 mb-2">
-            <span>📷</span>
-            <h2 class="text-sm font-bold tracking-wider text-white uppercase">Interactive Viewfinder Scanner</h2>
-        </div>
-        <p class="text-gray-400 text-xs mb-4">Drag or slide the amber bar below across the targets to simulate a real roadside camera capture sweep.</p>
-        
-        <!-- Interactive Viewfinder Slider Container -->
-        <div class="bg-[#0d131f] rounded-xl p-4 border border-[#232f45] mb-4 relative overflow-hidden select-none">
-            <div class="absolute inset-y-0 left-0 right-0 flex justify-between px-6 items-center pointer-events-none opacity-20">
-                <span class="text-xs text-white font-mono">[GG]</span>
-                <span class="text-xs text-white font-mono">[NAM]</span>
-                <span class="text-xs text-white font-mono">[PR]</span>
-                <span class="text-xs text-white font-mono">[SG]</span>
-            </div>
-            
-            <div class="relative w-full h-12 bg-[#161f30]/50 rounded-lg flex items-center border border-[#1e293b]">
-                <input type="range" id="viewfinder-range" min="0" max="100" value="0" oninput="handleScanSlider(this.value)" onChange="handleScanSlider(this.value)" class="scanner-slider w-full h-full accent-[#eab308] cursor-pointer opacity-80 bg-transparent rounded-lg appearance-none">
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2 mb-4">
-            <div class="bg-[#0d131f] rounded-lg p-2 text-center border border-[#1e293b]">
-                <p class="text-[10px] text-gray-400 uppercase font-bold">Slider Mode</p>
-                <p id="slider-status-tag" class="text-xs text-yellow-500 font-bold mt-0.5">Ready to Swipe</p>
-            </div>
-            <button onclick="simulateConvoy()" class="bg-[#2e1f1d] hover:bg-[#3d2926] text-orange-400 border border-orange-900/50 rounded-lg text-xs font-bold text-center transition-colors flex items-center justify-center gap-2">
-                💥 Convoy Sweep
-            </button>
-        </div>
-
-        <!-- Viewfinder Log output -->
-        <div class="bg-[#0d131f] rounded-lg p-3 border border-[#1e293b] font-mono text-[11px] text-gray-400 min-h-[50px] flex items-center">
-            <div id="viewfinder-log" class="w-full">
-                <span class="text-yellow-500 animate-pulse">●</span> Viewfinder passive. Slide the target bar left or right to register convoy logs...
-            </div>
-        </div>
+<!-- Modal 2: Report Breakdown Output -->
+<div class="modal" id="reportModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span>🔍 Spending Report</span>
+      <span class="close-modal" onclick="closeModal('reportModal')">&times;</span>
     </div>
-
-    <!-- 3. Baseline Metric Filters -->
-    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
-        <div class="flex items-center gap-2 mb-4">
-            <span>🚗</span>
-            <h2 class="text-sm font-bold tracking-wider text-white uppercase">Baseline Metric Filters</h2>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Vehicle Life Expectancy (Years)</label>
-                <input type="number" id="input-life" value="5" oninput="recalculateAll()" class="w-full bg-[#0d131f] border border-[#232f45] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-500">
-            </div>
-            <div>
-                <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Pump Fuel Baseline (D/L)</label>
-                <input type="number" id="input-fuel" value="120" oninput="recalculateAll()" class="w-full bg-[#0d131f] border border-[#232f45] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-500">
-            </div>
-        </div>
+    <div id="reportContent"></div>
+    <div class="share-row">
+      <a id="waShare" class="share-btn wa-btn" target="_blank">WhatsApp</a>
+      <a id="fbShare" class="share-btn fb-btn" target="_blank">Facebook</a>
+      <button class="share-btn tt-btn" onclick="copyReportText()">Copy text</button>
     </div>
+  </div>
+</div>
 
-    <!-- 4. Total Cumulative Fleet Cost -->
-    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
-        <div class="flex justify-between items-start mb-2">
-            <h2 class="text-xs font-bold tracking-wider text-yellow-500 uppercase">Total Cumulative Fleet Cost</h2>
-            <span class="text-[10px] font-bold bg-[#2e2315] text-amber-500 px-2 py-0.5 rounded border border-amber-900/30">Annualized</span>
-        </div>
-        <div id="total-cost-display" class="text-4xl font-extrabold text-white tracking-tight mb-4">
-            D0.00
-        </div>
-        
-        <div class="border-t border-[#232f45] pt-4">
-            <div class="flex items-center gap-2 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <span>📋</span> Compiled Unique Fleet Inventory Track:
-            </div>
-            <div id="fleet-inventory-track" class="text-xs text-gray-400 italic">
-                No plates registered in active stack. Use scanner controls above.
-            </div>
-        </div>
-    </div>
+<script>
+  let currentShareText = "";
 
-    <!-- 5. Alternative Civic Value -->
-    <div class="bg-[#161f30] rounded-xl p-6 mb-6 border border-[#232f45]">
-        <div class="flex items-center gap-2 mb-1">
-            <span>💡</span>
-            <h2 class="text-sm font-bold tracking-wider text-white uppercase">Alternative Civic & Medical Value</h2>
-        </div>
-        <p class="text-gray-400 text-xs mb-4">Instead of maintaining this scanned luxury fleet budget, the public sector could fund:</p>
+  function openScanModal() { 
+    document.getElementById('scanModal').style.display = 'flex'; 
+  }
+  function closeModal(id) { 
+    document.getElementById(id).style.display = 'none'; 
+  }
 
-        <div class="space-y-3">
-            <!-- Medical Equipment Package Slot -->
-            <div class="bg-[#0d131f] rounded-lg p-4 border border-[#1e293b] flex justify-between items-center">
-                <div>
-                    <h3 class="text-sm font-bold text-emerald-400">Essential Hospital Medical Packs</h3>
-                    <p class="text-gray-400 text-[11px] mt-0.5">Includes Oxygen, Saline Bags, Painkillers & Anesthesia setups</p>
-                    <p class="text-gray-500 text-[11px] mt-0.5">Unit Price: <span id="label-price-med">D45,000</span></p>
-                </div>
-                <div class="text-right">
-                    <span id="count-med" class="text-xl font-extrabold text-emerald-400">0</span>
-                    <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Full Supply Packs</p>
-                </div>
-            </div>
+  async function submitScan() {
+    const rawInput = document.getElementById('plateInput').value.trim();
+    if(!rawInput) return alert("Please type a license plate identifier first.");
+    closeModal('scanModal');
+    
+    try {
+      const res = await fetch(`/api/scan?plate=${encodeURIComponent(rawInput)}`);
+      const payload = await res.json();
+      if(!res.ok) return alert(payload.error || "Verification issue encountered.");
+      showReport(payload.data);
+    } catch(err) {
+      alert("Error reaching endpoint. Complete your full Vercel deployment branch hook updates first.");
+    }
+  }
 
-            <!-- Farming Tractors -->
-            <div class="bg-[#0d131f] rounded-lg p-4 border border-[#1e293b] flex justify-between items-center">
-                <div>
-                    <h3 class="text-sm font-bold text-blue-400">Heavy-Duty Farming Tractors</h3>
-                    <p class="text-gray-500 text-[11px] mt-0.5">Unit Price: <span id="label-price-tractors">D1,750,000</span></p>
-                </div>
-                <div class="text-right">
-                    <span id="count-tractors" class="text-xl font-extrabold text-blue-400">0</span>
-                    <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Machineries</p>
-                </div>
-            </div>
+  function showReport(info) {
+    document.getElementById('reportContent').innerHTML = `
+      <div class="report-card">
+        <div class="report-title">📋 ${info.plate.toUpperCase()} - ${info.model}</div>
+        <div class="report-line"><span>Engine Size:</span> <b>${info.engine}</b></div>
+        <div class="report-line"><span>Fuel Cost (5 Yrs):</span> <b>D ${info.breakdown.fuelCost.toLocaleString()}</b></div>
+        <div class="report-line"><span>Grand Total Cost:</span> <b>D ${info.breakdown.grandTotal.toLocaleString()}</b></div>
+      </div>
+      <div class="equiv-grid">
+        <div class="equiv-box"><div class="equiv-val">${info.equivalents.rice.toLocaleString()}</div><div class="equiv-lbl">Bags of Rice</div></div>
+        <div class="equiv-box"><div class="equiv-val">${info.equivalents.tractors}</div><div class="equiv-lbl">Tractors</div></div>
+        <div class="equiv-box"><div class="equiv-val">${info.equivalents.acUnits}</div><div class="equiv-lbl">AC Units</div></div>
+        <div class="equiv-box"><div class="equiv-val">${info.equivalents.beds}</div><div class="equiv-lbl">Hospital Beds</div></div>
+      </div>
+    `;
 
-            <!-- Rice Bags -->
-            <div class="bg-[#0d131f] rounded-lg p-4 border border-[#1e293b] flex justify-between items-center">
-                <div>
-                    <h3 class="text-sm font-bold text-amber-500">50kg Imported Bags of Rice</h3>
-                    <p class="text-gray-500 text-[11px] mt-0.5">Unit Price: <span id="label-price-rice">D2,500</span></p>
-                </div>
-                <div class="text-right">
-                    <span id="count-rice" class="text-xl font-extrabold text-amber-500">0</span>
-                    <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">Bags</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    currentShareText = `🚨 GAMBIA VEHICLE TRANSPARENCY REPORT 🚨\nPlate: ${info.plate.toUpperCase()}\nModel: ${info.model}\nCombined 5-Yr Cost: D ${info.breakdown.grandTotal.toLocaleString()}\n\nInstead of running this ONE vehicle, public funds could buy:\n🌾 ${info.equivalents.rice.toLocaleString()} Bags of Rice\n🚜 ${info.equivalents.tractors} Tractors\n❄️ ${info.equivalents.acUnits} AC Units\n🛏️ ${info.equivalents.beds} Hospital Beds\n\n#GambiaBudgetTracker 🇬🇲`;
+    
+    document.getElementById('waShare').href = `https://whatsapp.com{encodeURIComponent(currentShareText)}`;
+    document.getElementById('fbShare').href = `https://facebook.com{encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(currentShareText)}`;
+    document.getElementById('reportModal').style.display = 'flex';
 
-    <!-- 6. Social Accountability Share Platform -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
-        <button onclick="copyShareText('whatsapp')" class="bg-[#064e3b] hover:bg-[#065f46] text-green-300 border border-green-800 rounded-lg py-2.5 px-4 text-xs font-bold text-center transition-colors">
-            💚 Copy for WhatsApp
+    const feed = document.getElementById('historyFeed');
+    const item = document.createElement('div');
+    item.className = 'history-item';
+    item.innerHTML = `
+      <div class="car-thumb">${info.plate.substring(0,3).toUpperCase()}</div>
+      <div class="item-details">
+        <div class="item-title">${info.plate.toUpperCase()}</div>
+        <div class="item-subtitle">${info.model}</div>
+        <div class="status-badge"><span class="status-dot dot-red"></span>High Impact</div>
+        <div class="time-stamp">⏱ Just Scanned</div>
+      </div>
+    `;
+    feed.insertBefore(item, feed.firstChild);
+  }
+
+  function copyReportText() {
+    navigator.clipboard.writeText(currentShareText);
+    alert("Report text copied! Open TikTok or Facebook to paste.");
+  }
+</script>
+</body>
+</html>
