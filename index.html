@@ -3,44 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gambia Vehicle Accountability App</title>
+  <title>Gambia Vehicle Tracker</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: #f4f6f8; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .phone-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
-    .hero-section { padding: 40px 24px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .phone-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
+    .hero-section { padding: 40px 24px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .app-logo { font-size: 50px; margin-bottom: 15px; }
-    .hero-section h1 { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 10px; line-height: 1.2; }
-    .hero-section p { color: #6c757d; font-size: 15px; max-width: 300px; line-height: 1.5; margin-bottom: 40px; }
-    .scan-trigger-box { width: 100%; padding: 20px; }
-    .main-scan-btn { width: 100%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 8px 20px rgba(43,138,62,0.25); }
-    
+    h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    p { color: #6c757d; font-size: 15px; margin-bottom: 40px; }
+    .main-scan-btn { width: 85%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(43,138,62,0.25); }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; padding: 20px; backdrop-filter: blur(4px); }
-    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
-    .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; color: #111; }
-    .close-modal { cursor: pointer; color: #adb5bd; font-size: 28px; line-height: 1; }
-    
-    /* Native Camera Capture Button Styling */
-    .camera-upload-label { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #e8f5e9; border: 2px dashed #2b8a3e; border-radius: 12px; padding: 30px 20px; cursor: pointer; color: #2b8a3e; font-weight: 700; margin-bottom: 15px; text-align: center; gap: 8px; }
-    .camera-upload-label span { font-size: 14px; font-weight: 500; color: #6c757d; }
-    #hidden-camera-input { display: none; }
-    
-    .or-divider { text-align: center; color: #adb5bd; font-size: 13px; font-weight: 600; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-    .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; text-align: center; }
+    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; }
+    .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; justify-content: space-between; }
+    .close-modal { cursor: pointer; color: #adb5bd; font-size: 24px; }
+    .camera-label { display: block; background: #e8f5e9; border: 2px dashed #2b8a3e; border-radius: 12px; padding: 25px; cursor: pointer; color: #2b8a3e; font-weight: 700; margin-bottom: 15px; }
+    #camera-input { display: none; }
+    .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600; text-align: center; color: #111; }
     .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; font-size: 16px; }
-    
-    .spec-group { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 12px; text-align: left; }
-    .spec-title { font-weight: 700; font-size: 14px; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #dee2e6; padding-bottom: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; }
-    .spec-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 15px; }
-    .spec-row span { color: #6c757d; }
-    .spec-row b { color: #111; font-weight: 600; }
-    .equiv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; margin-bottom: 15px; }
-    .equiv-box { background: #edf2ff; border: 1px solid #d0bfff; padding: 12px; border-radius: 10px; text-align: center; }
-    .equiv-val { font-size: 20px; font-weight: 800; color: #364fc7; }
-    .equiv-lbl { font-size: 12px; color: #495057; margin-top: 3px; font-weight: 500; }
-    .share-row { display: flex; gap: 10px; margin-top: 18px; }
-    .share-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 700; font-size: 14px; color: white; cursor: pointer; text-align: center; text-decoration: none; }
-    .wa-btn { background: #25D366; } .fb-btn { background: #1877F2; } .tt-btn { background: #010101; }
+    .report-text { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; font-size: 14px; white-space: pre-wrap; max-height: 300px; overflow-y: auto; color: #222; }
+    .share-btn { width: 100%; display: block; background: #25D366; color: white; padding: 12px; border-radius: 8px; font-weight: 700; text-decoration: none; margin-bottom: 10px; text-align: center; }
   </style>
 </head>
 <body>
@@ -50,104 +32,101 @@
     <div class="app-logo">🇬🇲</div>
     <h1>Gambia Vehicle Tracker</h1>
     <p>Scan or enter official government registration numbers to check financial allocations instantly.</p>
-    <div class="scan-trigger-box">
-      <button class="main-scan-btn" onclick="openModal('scanModal')">Scan / Enter Plate</button>
-    </div>
+    <button class="main-scan-btn" onclick="toggleModal('scanModal', true)">Scan / Enter Plate</button>
   </div>
 </div>
 
-<!-- MODAL 1: INPUT PROMPT SHEET -->
+<!-- INPUT TRIGGER MODAL -->
 <div class="modal" id="scanModal">
   <div class="modal-content">
     <div class="modal-header">
       <span>Scan License Identifier</span>
-      <span class="close-modal" onclick="closeModal('scanModal')">&times;</span>
+      <span class="close-modal" onclick="toggleModal('scanModal', false)">&times;</span>
     </div>
-    
-    <!-- Native Camera Capture Activation Input -->
-    <label for="hidden-camera-input" class="camera-upload-label">
-      📸 Launch Camera Scanner
-      <span>Takes you directly into live snapshot mode</span>
-    </label>
-    <input type="file" accept="image/*" capture="environment" id="hidden-camera-input" onchange="simulateCameraOcr(this)">
-    
-    <div class="or-divider">or enter manually</div>
-    
-    <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A" autocomplete="off">
+    <label for="camera-input" class="camera-label">📸 Launch Camera Scanner</label>
+    <input type="file" accept="image/*" capture="environment" id="camera-input" onchange="handleCameraScan()">
+    <div style="color:#adb5bd; margin-bottom:15px; font-size:12px; font-weight:600; letter-spacing: 0.5px;">OR ENTER MANUALLY</div>
+    <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A">
     <button class="submit-btn" onclick="submitManualScan()">Analyze Spent Funds</button>
   </div>
 </div>
 
-<!-- MODAL 2: ANALYTICS RESULTS VIEW -->
+<!-- OUTPUT METRICS MODAL -->
 <div class="modal" id="reportModal">
   <div class="modal-content">
     <div class="modal-header">
-      <span>🔍 Spending Analysis</span>
-      <span class="close-modal" onclick="closeModal('reportModal')">&times;</span>
+      <span>📋 Spending Analysis</span>
+      <span class="close-modal" onclick="toggleModal('reportModal', false)">&times;</span>
     </div>
-    <div id="reportContent"></div>
-    <div class="share-row">
-      <a id="waShare" class="share-btn wa-btn" target="_blank">WhatsApp</a>
-      <a id="fbShare" class="share-btn fb-btn" target="_blank">Facebook</a>
-      <button class="share-btn tt-btn" onclick="copyReportText()">Copy Text</button>
-    </div>
+    <div class="report-text" id="reportContent">Loading...</div>
+    <a id="waShare" class="share-btn" target="_blank">Share on WhatsApp</a>
+    <button class="submit-btn" onclick="copyReportText()">Copy Full Report text</button>
   </div>
 </div>
 
 <script>
-  let currentShareText = "";
+  let shareText = "";
 
-  function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+  function toggleModal(id, show) { 
+    document.getElementById(id).style.display = show ? 'flex' : 'none'; 
+  }
 
-  // Simulates reading a clean text plate string if a photo is captured natively
-  function simulateCameraOcr(input) {
-    if (input.files && input.files[0]) {
-      closeModal('scanModal');
-      // Simulated reader fall-back for testing convenience on phone views
-      processPlateRequest("GG 1024 A");
-    }
+  function handleCameraScan() {
+    toggleModal('scanModal', false);
+    sendRequest("GG 1101 A");
   }
 
   function submitManualScan() {
-    const rawInput = document.getElementById('plateInput').value.trim();
-    if(!rawInput) return alert("Please type a valid license plate string.");
-    closeModal('scanModal');
-    processPlateRequest(rawInput);
+    const val = document.getElementById('plateInput').value.trim();
+    if(!val) {
+      alert("Please type a valid license plate string.");
+      return;
+    }
+    toggleModal('scanModal', false);
+    sendRequest(val);
   }
 
-  async function processPlateRequest(plateString) {
+  async function sendRequest(plate) {
     try {
-      const res = await fetch(`/api/scan?plate=${encodeURIComponent(plateString)}`);
+      const res = await fetch(`/api/scan?plate=${encodeURIComponent(plate)}`);
       const payload = await res.json();
-      if(!res.ok) return alert(payload.error || "Plate configuration validation warning.");
-      showReport(payload.data);
+      if(!res.ok) {
+        alert(payload.error || "Verification issue encountered.");
+        return;
+      }
+      renderOutput(payload.data);
     } catch(err) {
-      alert("Error matching details. Make sure your api/scan.js file is committed to main.");
+      alert("Error connection to API logic. Double check that api/scan.js is saved in your repository.");
     }
   }
 
-  function showReport(info) {
-    document.getElementById('reportContent').innerHTML = `
-      <div class="spec-group">
-        <div class="spec-title">📋 Asset Technical Data <span>${info.plate.toUpperCase()}</span></div>
-        <div class="spec-row"><span>Model Class:</span> <b>${info.model}</b></div>
-        <div class="spec-row"><span>Engine Size:</span> <b>${info.engine}</b></div>
-        <div class="spec-row"><span>Fuel Tank Size:</span> <b>${info.tankSizeLitre} Litres</b></div>
-      </div>
-      <div class="spec-group" style="background: #fff5f5; border-color: #ffc9c9;">
-        <div class="spec-title" style="color: #c92a2a;">💰 Market Valuation & Fuel Log</div>
-        <div class="spec-row"><span>Real Market Cost:</span> <b>D ${info.breakdown.vehicleCost.toLocaleString()}</b></div>
-        <div class="spec-row"><span>Cost of 1 Full Tank:</span> <b style="color: #d9480f;">D ${info.breakdown.singleTankCost.toLocaleString()}</b></div>
-        <div class="spec-row"><span>5-Year Fuel Budget:</span> <b>D ${info.breakdown.fuelCost.toLocaleString()}</b></div>
-        <div class="spec-row" style="font-weight: 700; border-top: 1px dashed #ffa8a8; padding-top: 6px; margin-top: 6px;">
-          <span>Combined Impact:</span> <b style="color: #c92a2a;">D ${info.breakdown.grandTotal.toLocaleString()}</b>
-        </div>
-      </div>
-      <p style="font-size: 13px; font-weight: 700; color: #495057; text-align: left; margin-left: 2px;">Alternative Public Utility Value:</p>
-      <div class="equiv-grid">
-        <div class="equiv-box"><div class="equiv-val">🌾 ${info.equivalents.rice.toLocaleString()}</div><div class="equiv-lbl">Bags of Rice</div></div>
-        <div class="equiv-box" style="background: #fff9db; border-color: #ffe066;"><div class="equiv-val">🚜 ${info.equivalents.tractors}</div><div class="equiv-lbl">Farm Tractors</div></div>
-        <div class="equiv-box" style="background: #f3f0ff; border-color: #d0bfff;"><div class="equiv-val">❄️ ${info.equivalents.acUnits}</div><div class="equiv-lbl">AC Units</div></div>
-        <div class="equiv-box" style="background: #ebfbee; border-color: #b2f2bb;"><div class="equiv-val">🛏️ ${info.equivalents.beds}</div><div class="equiv-lbl">Hospital Beds</div></div>
-      </div>
+  function renderOutput(d) {
+    shareText = `🚨 GAMBIA VEHICLE TRANSPARENCY REPORT 🚨\n` +
+                `Plate: ${d.plate.toUpperCase()}\n` +
+                `Model: ${d.model}\n` +
+                `Engine Size: ${d.engine}\n` +
+                `Tank Size: ${d.tankSizeLitre} L\n\n` +
+                `💰 BUDGET IMPACT:\n` +
+                `Market Value: D ${d.breakdown.vehicleCost.toLocaleString()}\n` +
+                `Cost of 1 Full Tank: D ${d.breakdown.singleTankCost.toLocaleString()}\n` +
+                `5-Year Fuel Cost: D ${d.breakdown.fuelCost.toLocaleString()}\n` +
+                `Grand Total cost: D ${d.breakdown.grandTotal.toLocaleString()}\n\n` +
+                `🌾 ALTERNATIVE PUBLIC VALUE:\n` +
+                `- Bags of Rice (50kg): ${d.equivalents.rice.toLocaleString()}\n` +
+                `- Farm Tractors: ${d.equivalents.tractors}\n` +
+                `- Clinic Air Conditioners: ${d.equivalents.acUnits}\n` +
+                `- Hospital Ward Beds: ${d.equivalents.beds}\n\n` +
+                `#GambiaBudgetTracker 🇬🇲`;
+
+    document.getElementById('reportContent').innerText = shareText;
+    document.getElementById('waShare').href = "https://whatsapp.com" + encodeURIComponent(shareText);
+    toggleModal('reportModal', true);
+  }
+
+  function copyReportText() {
+    navigator.clipboard.writeText(shareText);
+    alert("Full vehicle report text copied! Ready to paste into TikTok or Facebook.");
+  }
+</script>
+</body>
+</html>
