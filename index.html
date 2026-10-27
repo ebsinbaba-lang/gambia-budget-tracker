@@ -26,8 +26,6 @@
     .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
     .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; justify-content: space-between; }
     .close-modal { cursor: pointer; color: #adb5bd; font-size: 24px; }
-    .camera-label { display: block; background: #e8f5e9; border: 2px dashed #2b8a3e; border-radius: 12px; padding: 25px; cursor: pointer; text-align: center; font-weight: 600; margin-bottom: 15px; }
-    #camera-input { display: none; }
     .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
     .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; }
     .report-text { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; white-space: pre-wrap; font-size: 14px; }
@@ -40,22 +38,19 @@
     <div class="hero-section">
       <div class="app-logo">🇬🇲</div>
       <h1>Gambia Vehicle Tracker</h1>
-      <p>Scan or enter official government registration numbers to check financial allocations instantly.</p>
-      <button class="main-scan-btn" onclick="toggleModal('scanModal', true)">➡️ Scan / Enter Plate</button>
+      <p>Enter official government registration numbers to check financial allocations instantly.</p>
+      <button class="main-scan-btn" onclick="toggleModal('scanModal', true)">➡️ Enter Registration Plate</button>
       <button id="installAppBtn" class="pwa-btn" onclick="installPWA()">Download App</button>
     </div>
   </div>
 
-  <!-- INPUT MODAL -->
+  <!-- INPUT MODAL (Cleaned up: Camera Scanner completely removed) -->
   <div class="modal" id="scanModal">
     <div class="modal-content">
       <div class="modal-header">
         <span>License Identifier</span>
         <span class="close-modal" onclick="toggleModal('scanModal', false)">&times;</span>
       </div>
-      <label for="camera-input" class="camera-label">📸 Launch Camera Scanner</label>
-      <input type="file" accept="image/*" capture="environment" id="camera-input" onchange="handleCameraScan()">
-      <div style="color:#adb5bd; margin-bottom:15px; font-size:12px; font-weight:600; letter-spacing: 0.5px; text-align:center;">OR ENTER MANUALLY</div>
       <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A">
       <button class="submit-btn" onclick="submitManualScan()">Analyse Spent Funds</button>
     </div>
@@ -88,12 +83,6 @@
     // Modal Manager
     function toggleModal(id, show) {
       document.getElementById(id).style.display = show ? 'flex' : 'none';
-    }
-
-    // Camera Handler Reverted to a Stable Flow
-    function handleCameraScan() {
-      toggleModal('scanModal', false);
-      sendRequest("GG 1101 A");
     }
 
     // Manual Entry Submission Logic
