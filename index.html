@@ -12,6 +12,12 @@
   <meta name="apple-mobile-web-app-title" content="Gambia Tracker">
   <link rel="apple-touch-icon" href="/app-icon-v2.png">
 
+  <!-- Tailwind CSS v4 Browser Runtime Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Client-side OCR Text Extractor Library -->
+  <script src="https://jsdelivr.net"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -46,7 +52,7 @@
     </div>
   </div>
 
-  <!-- INPUT MODAL -->
+  <!-- INPUT SCREEN MODAL -->
   <div class="modal" id="scanModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -61,7 +67,7 @@
     </div>
   </div>
 
-  <!-- REPORT OUTPUT MODAL -->
+  <!-- SUMMARY DATA SCREEN REPORT MODAL -->
   <div class="modal" id="reportModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -78,26 +84,53 @@
     let shareText = "";
     let deferredPrompt = null;
 
-    // Service Worker Registration
+    // Service Worker Context Core Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW handle registered."));
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW tracer compiled."));
       });
     }
 
-    // Modal Manager
+    // Interactive Layout Modal Toggler
     function toggleModal(id, show) {
       document.getElementById(id).style.display = show ? 'flex' : 'none';
     }
 
-    // Camera Handler Reverted to a Stable Flow
-    function handleCameraScan() {
+    // Dynamic Client-Side Camera Scanner Processing Engine
+    async function handleCameraScan() {
+      const fileInput = document.getElementById('camera-input');
+      if (!fileInput.files || fileInput.files.length === 0) return;
+
       toggleModal('scanModal', false);
-      // For now, redirects to sample query lookup safely
-      sendRequest("GG 1101 A");
+      alert("Processing plate snapshot characters... please hold on.");
+
+      const file = fileInput.files[0];
+      const imageUrl = URL.createObjectURL(file);
+
+      try {
+        // Runs Tesseract OCR on the captured smartphone image file link
+        const result = await Tesseract.recognize(imageUrl, 'eng');
+        let detectedText = result.data.text.trim().toUpperCase();
+        
+        // Strip out noisy special notation characters or punctuation breaks
+        detectedText = detectedText.replace(/[^A-Z0-9 ]/g, "");
+
+        if (detectedText.length < 3) {
+          alert("Could not extract a clear registration sequence. Please match framing manually.");
+          return;
+        }
+
+        // Fire the live dynamic string structure directly to the backend engine lookup
+        sendRequest(detectedText);
+      } catch (error) {
+        console.error("Camera OCR engine scan crash context:", error);
+        alert("Camera tracking timed out. Please input the plate characters manually.");
+      } finally {
+        URL.revokeObjectURL(imageUrl); // Flush media asset memory from mobile RAM
+      }
     }
 
-    // Manual Entry Submission Logic
+    // Manual Interface Submit Routing
     function submitManualScan() {
       const val = document.getElementById('plateInput').value.trim();
       if(!val) return alert("Please type a valid license plate string.");
@@ -105,6 +138,7 @@
       sendRequest(val);
     }
 
+    // Fetch Database Allocation Request
     async function sendRequest(plate) {
       try {
         const res = await fetch(`/api/scan?plate=${encodeURIComponent(plate)}`);
@@ -112,10 +146,11 @@
         if(!res.ok) return alert(payload.error || "Verification issue encountered.");
         renderOutput(payload.data);
       } catch(err) {
-        alert("Error connecting to API logic.");
+        alert("Error connecting to API serverless engine parameters.");
       }
     }
 
+    // Output Assembly Formatting Template
     function renderOutput(d) {
       shareText = `📊 GAMBIA VEHICLE TRANSPARENCY REPORT 🇬🇲\n` +
                   `Plate: ${d.plate.toUpperCase()}\n` +
@@ -138,44 +173,23 @@
       toggleModal('reportModal', true);
     }
 
+    // Native Smartphone Menu Sharing Hook
     async function triggerNativeShare() {
       if (navigator.share) {
         try {
           await navigator.share({ title: 'Gambia Vehicle Transparency Report', text: shareText });
         } catch (err) {}
       } else {
-        alert("Native sharing not supported on this browser context. Use Copy Text option.");
+        alert("Native clipboard system sharing not supported in this tab view. Copy manual string fallback available.");
       }
     }
 
     function copyReportText() {
       navigator.clipboard.writeText(shareText);
-      alert("Full vehicle report text copied!");
+      alert("Full registration metric summary copied!");
     }
 
-    // PWA Installation Events
+    // PWA Installation Trigger Listeners
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      document.getElementById('installAppBtn').style.display = 'block';
-    });
-
-    function installPWA() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            document.getElementById('installAppBtn').style.display = 'none';
-          }
-          deferredPrompt = null;
-        });
-      } else {
-        alert("To download: Tap your browser's menu (three dots or share arrow) and select 'Add to Home screen' or 'Install app'.");
-      }
-    }
-
-    // Force display backup trigger
-    document.getElementById('installAppBtn').style.display = 'block';
-  </script>
-</body>
-</html>
