@@ -1,0 +1,17 @@
+{
+  "short_name": "GambiaTracker",
+  "name": "Gambia Vehicle Accountability Tracker",
+  "icons": [
+    {
+      "src": "https://flaticon.com",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#2b8a3e",
+  "display": "standalone",
+  "orientation": "portrait"
+}
