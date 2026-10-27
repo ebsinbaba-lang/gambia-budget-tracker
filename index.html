@@ -26,7 +26,7 @@
     .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
     .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; justify-content: space-between; }
     .close-modal { cursor: pointer; color: #adb5bd; font-size: 24px; }
-    .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
+    .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
     .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; }
     .report-text { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; white-space: pre-wrap; font-size: 14px; }
     .system-share-btn { width: 100%; display: block; background: #1c7ed6; color: white; padding: 14px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; margin-bottom: 10px; }
@@ -44,15 +44,15 @@
     </div>
   </div>
 
-  <!-- INPUT MODAL (Cleaned up: Camera Scanner completely removed) -->
+  <!-- INPUT MODAL -->
   <div class="modal" id="scanModal">
     <div class="modal-content">
       <div class="modal-header">
         <span>License Identifier</span>
         <span class="close-modal" onclick="toggleModal('scanModal', false)">&times;</span>
       </div>
-      <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A">
-      <button class="submit-btn" onclick="submitManualScan()">Analyse Spent Funds</button>
+      <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A" maxlength="11">
+      <button class="submit-btn" onclick="submitManualScan()">Analyze Spent Funds</button>
     </div>
   </div>
 
@@ -83,7 +83,46 @@
     // Modal Manager
     function toggleModal(id, show) {
       document.getElementById(id).style.display = show ? 'flex' : 'none';
+      if (show && id === 'scanModal') {
+        setTimeout(() => document.getElementById('plateInput').focus(), 100);
+      }
     }
+
+    // Smart Auto-Spacing Input Formatter
+    const plateInput = document.getElementById('plateInput');
+    plateInput.addEventListener('input', (e) => {
+      // 1. Remove all existing spaces and force uppercase
+      let value = e.target.value.replace(/\s+/g, '').toUpperCase();
+      
+      // 2. Strip out non-alphanumeric characters
+      value = value.replace(/[^A-Z0-9]/g, '');
+
+      let formatted = '';
+      
+      // Handle prefix sorting (e.g., GG, NAM, SH, SG, PR)
+      // Check if it starts with long prefixes first (like NAM)
+      let prefixLength = value.startsWith('NAM') ? 3 : 2;
+
+      if (value.length > 0) {
+        // Cut out the characters section
+        let part1 = value.substring(0, prefixLength);
+        formatted += part1;
+
+        if (value.length > prefixLength) {
+          // Cut out the numbers section (max 4 digits usually)
+          let part2 = value.substring(prefixLength, prefixLength + 4);
+          formatted += ' ' + part2;
+
+          if (value.length > prefixLength + 4) {
+            // Cut out the single trailing letter section (if present)
+            let part3 = value.substring(prefixLength + 4, prefixLength + 5);
+            formatted += ' ' + part3;
+          }
+        }
+      }
+      
+      e.target.value = formatted;
+    });
 
     // Manual Entry Submission Logic
     function submitManualScan() {
