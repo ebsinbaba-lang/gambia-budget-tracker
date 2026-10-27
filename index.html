@@ -4,50 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gambia Vehicle Accountability App</title>
+  <!-- Standard web scanner engine resource library -->
+  <script src="https://unpkg.com" type="text/javascript"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     body { background-color: #f4f6f8; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    
     .phone-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
-    
-    /* Elegant Landing Area */
     .hero-section { padding: 40px 24px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%); }
-    .app-logo { font-size: 50px; margin-bottom: 15px; animation: pulse 2s infinite; }
-    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-    
+    .app-logo { font-size: 50px; margin-bottom: 15px; }
     .hero-section h1 { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 10px; line-height: 1.2; }
     .hero-section p { color: #6c757d; font-size: 15px; max-width: 300px; line-height: 1.5; margin-bottom: 40px; }
-
-    /* Action Trigger Button */
     .scan-trigger-box { width: 100%; padding: 20px; }
-    .main-scan-btn { width: 100%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 8px 20px rgba(43,138,62,0.25); transition: all 0.2s; }
-    .main-scan-btn:active { transform: scale(0.98); box-shadow: 0 4px 10px rgba(43,138,62,0.15); }
-
-    /* Overlays / Modals */
+    .main-scan-btn { width: 100%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 8px 20px rgba(43,138,62,0.25); }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; padding: 20px; backdrop-filter: blur(4px); }
-    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
     .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; color: #111; }
     .close-modal { cursor: pointer; color: #adb5bd; font-size: 28px; line-height: 1; }
     
-    .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; transition: border-color 0.2s; }
-    .input-field:focus { outline: none; border-color: #2b8a3e; }
+    /* Live Video Camera Element Box */
+    #camera-viewfinder { width: 100%; background: #000; border-radius: 10px; margin-bottom: 15px; overflow: hidden; min-height: 250px; }
+    
+    .or-divider { text-align: center; color: #adb5bd; font-size: 13px; font-weight: 600; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
     .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; font-size: 16px; }
-
-    /* Specification Breakdown Report Elements */
     .spec-group { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 12px; }
     .spec-title { font-weight: 700; font-size: 14px; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #dee2e6; padding-bottom: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; }
     .spec-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 15px; }
-    .spec-row:last-child { margin-bottom: 0; }
     .spec-row span { color: #6c757d; }
     .spec-row b { color: #111; font-weight: 600; }
-
-    /* Equiv Comparative Layout */
     .equiv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; margin-bottom: 15px; }
     .equiv-box { background: #edf2ff; border: 1px solid #d0bfff; padding: 12px; border-radius: 10px; text-align: center; }
     .equiv-val { font-size: 20px; font-weight: 800; color: #364fc7; }
     .equiv-lbl { font-size: 12px; color: #495057; margin-top: 3px; font-weight: 500; }
-
-    /* Share Controls */
     .share-row { display: flex; gap: 10px; margin-top: 18px; }
     .share-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 700; font-size: 14px; color: white; cursor: pointer; text-align: center; text-decoration: none; }
     .wa-btn { background: #25D366; } .fb-btn { background: #1877F2; } .tt-btn { background: #010101; }
@@ -56,43 +44,42 @@
 <body>
 
 <div class="phone-container">
-  <!-- Clean Dashboard Hero Screen Area -->
   <div class="hero-section">
     <div class="app-logo">🇬🇲</div>
     <h1>Gambia Vehicle Tracker</h1>
     <p>Scan or enter official government registration numbers to check financial allocations instantly.</p>
-    
     <div class="scan-trigger-box">
-      <button class="main-scan-btn" onclick="openModal('scanModal')">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        Scan / Enter Plate
-      </button>
+      <button class="main-scan-btn" onclick="openScanModal()">Scan / Enter Plate</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL 1: PROMPT INPUT DIALOGUE -->
+<!-- MODAL 1: CAMERA SCANNER & MANUAL TYPE INPUT PROMPT -->
 <div class="modal" id="scanModal">
   <div class="modal-content">
     <div class="modal-header">
       <span>Scan License Identifier</span>
-      <span class="close-modal" onclick="closeModal('scanModal')">&times;</span>
+      <span class="close-modal" onclick="closeScanModal()">&times;</span>
     </div>
+    
+    <!-- Active Camera Viewfinder Box -->
+    <div id="camera-viewfinder"></div>
+    
+    <div class="or-divider">or enter manually</div>
+    
     <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A" autocomplete="off">
-    <button class="submit-btn" onclick="submitScan()">Analyze Spent Funds</button>
+    <button class="submit-btn" onclick="submitManualScan()">Analyze Spent Funds</button>
   </div>
 </div>
 
-<!-- MODAL 2: DEEP SPECIFICATION RESULT SHEET -->
+<!-- MODAL 2: SPENDING BREAKDOWN DISPLAY -->
 <div class="modal" id="reportModal">
-  <div class="modal-content" style="max-width: 420px;">
+  <div class="modal-content">
     <div class="modal-header">
-      <span>🔎 Spending Analysis</span>
+      <span>🔍 Spending Analysis</span>
       <span class="close-modal" onclick="closeModal('reportModal')">&times;</span>
     </div>
-    
     <div id="reportContent"></div>
-    
     <div class="share-row">
       <a id="waShare" class="share-btn wa-btn" target="_blank">WhatsApp</a>
       <a id="fbShare" class="share-btn fb-btn" target="_blank">Facebook</a>
@@ -103,36 +90,79 @@
 
 <script>
   let currentShareText = "";
+  let html5QrcodeScanner = null;
 
   function openModal(id) { document.getElementById(id).style.display = 'flex'; }
   function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-  async function submitScan() {
+  // Opens modal and triggers system prompt asking for hardware camera stream access
+  function openScanModal() {
+    openModal('scanModal');
+    
+    // Instantiates scanner targeting viewfinder area
+    html5QrcodeScanner = new Html5Qrcode("camera-viewfinder");
+    
+    const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+    
+    // Request permission and start camera stream (prefers back camera)
+    html5QrcodeScanner.start(
+      { facingMode: "environment" }, 
+      config,
+      onScanSuccess,
+      onScanFailure
+    ).catch(err => {
+      // Graceful fallback display if device has no camera or permission was blocked
+      document.getElementById('camera-viewfinder').innerHTML = 
+        `<div style="color: #6c757d; padding: 40px 20px; text-align: center; font-size: 14px;">📷 Camera stream suspended. Use manual box configuration shortcut options below.</div>`;
+    });
+  }
+
+  // Closes scanner modal and stops hardware camera process cleanly
+  function closeScanModal() {
+    closeModal('scanModal');
+    if (html5QrcodeScanner) {
+      html5QrcodeScanner.stop().catch(err => console.log("Scanner cleanup trace handled."));
+    }
+  }
+
+  // When live camera frame reads text string character parameters accurately
+  function onScanSuccess(decodedText, decodedResult) {
+    if (decodedText) {
+      closeScanModal();
+      processPlateRequest(decodedText);
+    }
+  }
+
+  function onScanFailure(error) {
+    // Continuous background scanning loop diagnostics (left blank to prevent spam logs)
+  }
+
+  function submitManualScan() {
     const rawInput = document.getElementById('plateInput').value.trim();
     if(!rawInput) return alert("Please type a valid license plate string.");
-    closeModal('scanModal');
-    
+    closeScanModal();
+    processPlateRequest(rawInput);
+  }
+
+  async function processPlateRequest(plateString) {
     try {
-      const res = await fetch(`/api/scan?plate=${encodeURIComponent(rawInput)}`);
+      const res = await fetch(`/api/scan?plate=${encodeURIComponent(plateString)}`);
       const payload = await res.json();
       if(!res.ok) return alert(payload.error || "Plate type verification warning.");
       showReport(payload.data);
     } catch(err) {
-      alert("Error reaching verification script. Ensure backend api file handles are published.");
+      alert("Error reaching verification script backend server handles.");
     }
   }
 
   function showReport(info) {
     document.getElementById('reportContent').innerHTML = `
-      <!-- Technical Vehicle Lineage Blueprint Specs -->
       <div class="spec-group">
         <div class="spec-title">📋 Asset Technical Data <span>${info.plate.toUpperCase()}</span></div>
         <div class="spec-row"><span>Model Class:</span> <b>${info.model}</b></div>
         <div class="spec-row"><span>Engine Size:</span> <b>${info.engine}</b></div>
         <div class="spec-row"><span>Fuel Tank Size:</span> <b>${info.tankSizeLitre} Litres</b></div>
       </div>
-
-      <!-- Live Real-World Price Cost Comp Calculations -->
       <div class="spec-group" style="background: #fff5f5; border-color: #ffc9c9;">
         <div class="spec-title" style="color: #c92a2a;">💰 Market Valuation & Fuel Log</div>
         <div class="spec-row"><span>Real Market Cost:</span> <b>D ${info.breakdown.vehicleCost.toLocaleString()}</b></div>
@@ -142,14 +172,5 @@
           <span>Combined Impact:</span> <b style="color: #c92a2a;">D ${info.breakdown.grandTotal.toLocaleString()}</b>
         </div>
       </div>
-
       <p style="font-size: 13px; font-weight: 700; color: #495057; margin-left: 2px;">Alternative Public Utility Value:</p>
-      
       <div class="equiv-grid">
-        <div class="equiv-box"><div class="equiv-val">🌾 ${info.equivalents.rice.toLocaleString()}</div><div class="equiv-lbl">Bags of Rice</div></div>
-        <div class="equiv-box" style="background: #fff9db; border-color: #ffe066;"><div class="equiv-val">🚜 ${info.equivalents.tractors}</div><div class="equiv-lbl">Farm Tractors</div></div>
-        <div class="equiv-box" style="background: #f3f0ff; border-color: #d0bfff;"><div class="equiv-val">❄️ ${info.equivalents.acUnits}</div><div class="equiv-lbl">AC Units</div></div>
-        <div class="equiv-box" style="background: #ebfbee; border-color: #b2f2bb;"><div class="equiv-val">🛏️ ${info.equivalents.beds}</div><div class="equiv-lbl">Hospital Beds</div></div>
-      </div>
-    `;
-
