@@ -6,110 +6,97 @@
   <title>Gambia Vehicle Accountability App</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: #f8f9fa; color: #333; display: flex; justify-content: center; }
-    .phone-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+    body { background-color: #f4f6f8; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
     
-    /* Header Navbar */
-    .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f3f5; }
-    .header h1 { font-size: 28px; font-weight: 700; color: #111; }
-    .header-icons { font-size: 22px; cursor: pointer; display: flex; gap: 15px; }
-
-    /* History Feed */
-    .history-feed { padding: 15px; flex-grow: 1; overflow-y: auto; padding-bottom: 100px; }
-    .history-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f8f9fa; align-items: center; }
-    .car-thumb { width: 70px; height: 70px; background: #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 1px solid #dee2e6; color: #495057; text-align: center; }
-    .item-details { flex-grow: 1; }
-    .item-title { font-weight: 600; font-size: 16px; margin-bottom: 2px; }
-    .item-subtitle { color: #6c757d; font-size: 14px; margin-bottom: 6px; }
-    .status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-    .dot-red { background: #fa5252; } .dot-orange { background: #fd7e14; } .dot-green { background: #40c057; }
-    .time-stamp { color: #adb5bd; font-size: 12px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
-
-    /* Sticky Scan Button */
-    .scan-btn { position: fixed; bottom: 85px; right: 20px; background: #37b24d; color: white; padding: 14px 24px; border-radius: 30px; font-weight: 600; font-size: 16px; border: none; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 8px 16px rgba(55,178,77,0.3); z-index: 10; }
-
-    /* Bottom Navigation Bar */
-    .nav-bar { position: sticky; bottom: 0; background: white; border-top: 1px solid #efefef; display: flex; justify-content: space-around; padding: 12px 0; font-size: 12px; color: #868e96; z-index: 9; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
-    .nav-item.active { color: #e8590c; font-weight: 600; }
-
-    /* Modals */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
-    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-    .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 15px; display: flex; justify-content: space-between; }
-    .close-modal { cursor: pointer; color: #adb5bd; }
-    .input-field { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
-    .submit-btn { width: 100%; background: #212529; color: white; padding: 14px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; font-size: 16px; }
+    .phone-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
     
-    /* Metrics Display */
-    .report-card { background: #f1f3f5; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 14px; }
-    .report-title { font-weight: bold; border-bottom: 1px solid #dee2e6; padding-bottom: 5px; margin-bottom: 10px; }
-    .report-line { display: flex; justify-content: space-between; margin-bottom: 6px; }
-    .equiv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-    .equiv-box { background: #e8f7ff; border: 1px solid #bbeeec; padding: 12px; border-radius: 8px; text-align: center; }
-    .equiv-val { font-size: 18px; font-weight: 700; color: #1c7ed6; }
-    .equiv-lbl { font-size: 11px; color: #495057; margin-top: 2px; }
+    /* Elegant Landing Area */
+    .hero-section { padding: 40px 24px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%); }
+    .app-logo { font-size: 50px; margin-bottom: 15px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    
+    .hero-section h1 { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 10px; line-height: 1.2; }
+    .hero-section p { color: #6c757d; font-size: 15px; max-width: 300px; line-height: 1.5; margin-bottom: 40px; }
 
-    /* Share Actions */
-    .share-row { display: flex; gap: 10px; margin-top: 15px; }
-    .share-btn { flex: 1; padding: 10px; border-radius: 6px; border: none; font-weight: 600; font-size: 13px; color: white; cursor: pointer; text-align: center; text-decoration: none; }
+    /* Action Trigger Button */
+    .scan-trigger-box { width: 100%; padding: 20px; }
+    .main-scan-btn { width: 100%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 8px 20px rgba(43,138,62,0.25); transition: all 0.2s; }
+    .main-scan-btn:active { transform: scale(0.98); box-shadow: 0 4px 10px rgba(43,138,62,0.15); }
+
+    /* Overlays / Modals */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; padding: 20px; backdrop-filter: blur(4px); }
+    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+    .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; color: #111; }
+    .close-modal { cursor: pointer; color: #adb5bd; font-size: 28px; line-height: 1; }
+    
+    .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; transition: border-color 0.2s; }
+    .input-field:focus { outline: none; border-color: #2b8a3e; }
+    .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; font-size: 16px; }
+
+    /* Specification Breakdown Report Elements */
+    .spec-group { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 12px; }
+    .spec-title { font-weight: 700; font-size: 14px; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #dee2e6; padding-bottom: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .spec-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 15px; }
+    .spec-row:last-child { margin-bottom: 0; }
+    .spec-row span { color: #6c757d; }
+    .spec-row b { color: #111; font-weight: 600; }
+
+    /* Equiv Comparative Layout */
+    .equiv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; margin-bottom: 15px; }
+    .equiv-box { background: #edf2ff; border: 1px solid #d0bfff; padding: 12px; border-radius: 10px; text-align: center; }
+    .equiv-val { font-size: 20px; font-weight: 800; color: #364fc7; }
+    .equiv-lbl { font-size: 12px; color: #495057; margin-top: 3px; font-weight: 500; }
+
+    /* Share Controls */
+    .share-row { display: flex; gap: 10px; margin-top: 18px; }
+    .share-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 700; font-size: 14px; color: white; cursor: pointer; text-align: center; text-decoration: none; }
     .wa-btn { background: #25D366; } .fb-btn { background: #1877F2; } .tt-btn { background: #010101; }
   </style>
 </head>
 <body>
 
 <div class="phone-container">
-  <div class="header">
-    <h1>History</h1>
-    <div class="header-icons"><span>★</span><span>⋮</span></div>
-  </div>
-
-  <div class="history-feed" id="historyFeed">
-    <div class="history-item">
-      <div class="car-thumb">GG</div>
-      <div class="item-details">
-        <div class="item-title">GG 0058 A</div>
-        <div class="item-subtitle">Toyota Land Cruiser 300 VXR</div>
-        <div class="status-badge"><span class="status-dot dot-red"></span>High Impact Expenses</div>
-        <div class="time-stamp">⏱ 4 hours ago</div>
-      </div>
+  <!-- Clean Dashboard Hero Screen Area -->
+  <div class="hero-section">
+    <div class="app-logo">🇬🇲</div>
+    <h1>Gambia Vehicle Tracker</h1>
+    <p>Scan or enter official government registration numbers to check financial allocations instantly.</p>
+    
+    <div class="scan-trigger-box">
+      <button class="main-scan-btn" onclick="openModal('scanModal')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Scan / Enter Plate
+      </button>
     </div>
-  </div>
-
-  <button class="scan-btn" onclick="openScanModal()">Scan Plate</button>
-
-  <div class="nav-bar">
-    <div class="nav-item active"><span>History</span></div>
-    <div class="nav-item"><span>Recs</span></div>
-    <div class="nav-item"><span>Overview</span></div>
   </div>
 </div>
 
-<!-- Modal 1: Input Scanner Prompt -->
+<!-- MODAL 1: PROMPT INPUT DIALOGUE -->
 <div class="modal" id="scanModal">
   <div class="modal-content">
     <div class="modal-header">
-      <span>Scan Official Plate</span>
+      <span>Scan License Identifier</span>
       <span class="close-modal" onclick="closeModal('scanModal')">&times;</span>
     </div>
-    <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A">
-    <button class="submit-btn" onclick="submitScan()">Analyze Asset Spending</button>
+    <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A" autocomplete="off">
+    <button class="submit-btn" onclick="submitScan()">Analyze Spent Funds</button>
   </div>
 </div>
 
-<!-- Modal 2: Report Breakdown Output -->
+<!-- MODAL 2: DEEP SPECIFICATION RESULT SHEET -->
 <div class="modal" id="reportModal">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width: 420px;">
     <div class="modal-header">
-      <span>🔍 Spending Report</span>
+      <span>🔎 Spending Analysis</span>
       <span class="close-modal" onclick="closeModal('reportModal')">&times;</span>
     </div>
+    
     <div id="reportContent"></div>
+    
     <div class="share-row">
       <a id="waShare" class="share-btn wa-btn" target="_blank">WhatsApp</a>
       <a id="fbShare" class="share-btn fb-btn" target="_blank">Facebook</a>
-      <button class="share-btn tt-btn" onclick="copyReportText()">Copy text</button>
+      <button class="share-btn tt-btn" onclick="copyReportText()">Copy Text</button>
     </div>
   </div>
 </div>
@@ -117,69 +104,52 @@
 <script>
   let currentShareText = "";
 
-  function openScanModal() { 
-    document.getElementById('scanModal').style.display = 'flex'; 
-  }
-  function closeModal(id) { 
-    document.getElementById(id).style.display = 'none'; 
-  }
+  function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
   async function submitScan() {
     const rawInput = document.getElementById('plateInput').value.trim();
-    if(!rawInput) return alert("Please type a license plate identifier first.");
+    if(!rawInput) return alert("Please type a valid license plate string.");
     closeModal('scanModal');
     
     try {
       const res = await fetch(`/api/scan?plate=${encodeURIComponent(rawInput)}`);
       const payload = await res.json();
-      if(!res.ok) return alert(payload.error || "Verification issue encountered.");
+      if(!res.ok) return alert(payload.error || "Plate type verification warning.");
       showReport(payload.data);
     } catch(err) {
-      alert("Error reaching endpoint. Complete your full Vercel deployment branch hook updates first.");
+      alert("Error reaching verification script. Ensure backend api file handles are published.");
     }
   }
 
   function showReport(info) {
     document.getElementById('reportContent').innerHTML = `
-      <div class="report-card">
-        <div class="report-title">📋 ${info.plate.toUpperCase()} - ${info.model}</div>
-        <div class="report-line"><span>Engine Size:</span> <b>${info.engine}</b></div>
-        <div class="report-line"><span>Fuel Cost (5 Yrs):</span> <b>D ${info.breakdown.fuelCost.toLocaleString()}</b></div>
-        <div class="report-line"><span>Grand Total Cost:</span> <b>D ${info.breakdown.grandTotal.toLocaleString()}</b></div>
+      <!-- Technical Vehicle Lineage Blueprint Specs -->
+      <div class="spec-group">
+        <div class="spec-title">📋 Asset Technical Data <span>${info.plate.toUpperCase()}</span></div>
+        <div class="spec-row"><span>Model Class:</span> <b>${info.model}</b></div>
+        <div class="spec-row"><span>Engine Size:</span> <b>${info.engine}</b></div>
+        <div class="spec-row"><span>Fuel Tank Size:</span> <b>${info.tankSizeLitre} Litres</b></div>
       </div>
+
+      <!-- Live Real-World Price Cost Comp Calculations -->
+      <div class="spec-group" style="background: #fff5f5; border-color: #ffc9c9;">
+        <div class="spec-title" style="color: #c92a2a;">💰 Market Valuation & Fuel Log</div>
+        <div class="spec-row"><span>Real Market Cost:</span> <b>D ${info.breakdown.vehicleCost.toLocaleString()}</b></div>
+        <div class="spec-row"><span>Cost of 1 Full Tank:</span> <b style="color: #d9480f;">D ${info.breakdown.singleTankCost.toLocaleString()}</b></div>
+        <div class="spec-row"><span>5-Year Fuel Budget:</span> <b>D ${info.breakdown.fuelCost.toLocaleString()}</b></div>
+        <div class="spec-row" style="font-weight: 700; border-top: 1px dashed #ffa8a8; padding-top: 6px; margin-top: 6px;">
+          <span>Combined Impact:</span> <b style="color: #c92a2a;">D ${info.breakdown.grandTotal.toLocaleString()}</b>
+        </div>
+      </div>
+
+      <p style="font-size: 13px; font-weight: 700; color: #495057; margin-left: 2px;">Alternative Public Utility Value:</p>
+      
       <div class="equiv-grid">
-        <div class="equiv-box"><div class="equiv-val">${info.equivalents.rice.toLocaleString()}</div><div class="equiv-lbl">Bags of Rice</div></div>
-        <div class="equiv-box"><div class="equiv-val">${info.equivalents.tractors}</div><div class="equiv-lbl">Tractors</div></div>
-        <div class="equiv-box"><div class="equiv-val">${info.equivalents.acUnits}</div><div class="equiv-lbl">AC Units</div></div>
-        <div class="equiv-box"><div class="equiv-val">${info.equivalents.beds}</div><div class="equiv-lbl">Hospital Beds</div></div>
+        <div class="equiv-box"><div class="equiv-val">🌾 ${info.equivalents.rice.toLocaleString()}</div><div class="equiv-lbl">Bags of Rice</div></div>
+        <div class="equiv-box" style="background: #fff9db; border-color: #ffe066;"><div class="equiv-val">🚜 ${info.equivalents.tractors}</div><div class="equiv-lbl">Farm Tractors</div></div>
+        <div class="equiv-box" style="background: #f3f0ff; border-color: #d0bfff;"><div class="equiv-val">❄️ ${info.equivalents.acUnits}</div><div class="equiv-lbl">AC Units</div></div>
+        <div class="equiv-box" style="background: #ebfbee; border-color: #b2f2bb;"><div class="equiv-val">🛏️ ${info.equivalents.beds}</div><div class="equiv-lbl">Hospital Beds</div></div>
       </div>
     `;
 
-    currentShareText = `🚨 GAMBIA VEHICLE TRANSPARENCY REPORT 🚨\nPlate: ${info.plate.toUpperCase()}\nModel: ${info.model}\nCombined 5-Yr Cost: D ${info.breakdown.grandTotal.toLocaleString()}\n\nInstead of running this ONE vehicle, public funds could buy:\n🌾 ${info.equivalents.rice.toLocaleString()} Bags of Rice\n🚜 ${info.equivalents.tractors} Tractors\n❄️ ${info.equivalents.acUnits} AC Units\n🛏️ ${info.equivalents.beds} Hospital Beds\n\n#GambiaBudgetTracker 🇬🇲`;
-    
-    document.getElementById('waShare').href = `https://whatsapp.com{encodeURIComponent(currentShareText)}`;
-    document.getElementById('fbShare').href = `https://facebook.com{encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(currentShareText)}`;
-    document.getElementById('reportModal').style.display = 'flex';
-
-    const feed = document.getElementById('historyFeed');
-    const item = document.createElement('div');
-    item.className = 'history-item';
-    item.innerHTML = `
-      <div class="car-thumb">${info.plate.substring(0,3).toUpperCase()}</div>
-      <div class="item-details">
-        <div class="item-title">${info.plate.toUpperCase()}</div>
-        <div class="item-subtitle">${info.model}</div>
-        <div class="status-badge"><span class="status-dot dot-red"></span>High Impact</div>
-        <div class="time-stamp">⏱ Just Scanned</div>
-      </div>
-    `;
-    feed.insertBefore(item, feed.firstChild);
-  }
-
-  function copyReportText() {
-    navigator.clipboard.writeText(currentShareText);
-    alert("Report text copied! Open TikTok or Facebook to paste.");
-  }
-</script>
-</body>
-</html>
