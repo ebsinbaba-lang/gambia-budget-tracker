@@ -20,9 +20,9 @@
     .camera-label { display: block; background: #e8f5e9; border: 2px dashed #2b8a3e; border-radius: 12px; padding: 25px; cursor: pointer; color: #2b8a3e; font-weight: 700; margin-bottom: 15px; }
     #camera-input { display: none; }
     .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600; text-align: center; color: #111; }
-    .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; font-size: 16px; }
+    .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; font-size: 16px; margin-bottom: 10px; }
     .report-text { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; font-size: 14px; white-space: pre-wrap; max-height: 300px; overflow-y: auto; color: #222; }
-    .share-btn { width: 100%; display: block; background: #25D366; color: white; padding: 12px; border-radius: 8px; font-weight: 700; text-decoration: none; margin-bottom: 10px; text-align: center; }
+    .system-share-btn { width: 100%; display: block; background: #1c7ed6; color: white; padding: 14px; border-radius: 10px; font-weight: 700; border: none; margin-bottom: 10px; text-align: center; cursor: pointer; font-size: 16px; }
   </style>
 </head>
 <body>
@@ -59,8 +59,9 @@
       <span class="close-modal" onclick="toggleModal('reportModal', false)">&times;</span>
     </div>
     <div class="report-text" id="reportContent">Loading...</div>
-    <a id="waShare" class="share-btn" target="_blank">Share on WhatsApp</a>
-    <button class="submit-btn" onclick="copyReportText()">Copy Full Report text</button>
+    <!-- New Native Sharing Hook Options -->
+    <button id="nativeShareBtn" class="system-share-btn" onclick="triggerNativeShare()">Share Report</button>
+    <button class="submit-btn" onclick="copyReportText()">Copy Full Report Text</button>
   </div>
 </div>
 
@@ -96,7 +97,7 @@
       }
       renderOutput(payload.data);
     } catch(err) {
-      alert("Error connection to API logic. Double check that api/scan.js is saved in your repository.");
+      alert("Error connecting to API logic. Double check that api/scan.js is saved in your repository.");
     }
   }
 
@@ -107,10 +108,10 @@
                 `Engine Size: ${d.engine}\n` +
                 `Tank Size: ${d.tankSizeLitre} L\n\n` +
                 `💰 BUDGET IMPACT:\n` +
-                `Market Value: D ${d.breakdown.vehicleCost.toLocaleString()}\n` +
-                `Cost of 1 Full Tank: D ${d.breakdown.singleTankCost.toLocaleString()}\n` +
-                `5-Year Fuel Cost: D ${d.breakdown.fuelCost.toLocaleString()}\n` +
-                `Grand Total cost: D ${d.breakdown.grandTotal.toLocaleString()}\n\n` +
+                `- Market Value: D ${d.breakdown.vehicleCost.toLocaleString()}\n` +
+                `- Cost of 1 Full Tank: D ${d.breakdown.singleTankCost.toLocaleString()}\n` +
+                `- 5-Year Fuel Cost: D ${d.breakdown.fuelCost.toLocaleString()}\n` +
+                `- Grand Total Cost: D ${d.breakdown.grandTotal.toLocaleString()}\n\n` +
                 `🌾 ALTERNATIVE PUBLIC VALUE:\n` +
                 `- Bags of Rice (50kg): ${d.equivalents.rice.toLocaleString()}\n` +
                 `- Farm Tractors: ${d.equivalents.tractors}\n` +
@@ -119,8 +120,25 @@
                 `#GambiaBudgetTracker 🇬🇲`;
 
     document.getElementById('reportContent').innerText = shareText;
-    document.getElementById('waShare').href = "https://whatsapp.com" + encodeURIComponent(shareText);
     toggleModal('reportModal', true);
+  }
+
+  // Uses the user device's native sharing sheet options launcher
+  async function triggerNativeShare() {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Gambia Vehicle Transparency Report',
+          text: shareText
+        });
+      } catch (err) {
+        console.log("Share sheet cancelled or interrupted.");
+      }
+    } else {
+      // Fallback if browser security controls restrict direct share access
+      navigator.clipboard.writeText(shareText);
+      alert("System Share not supported on this browser context. Report text has been copied to your clipboard instead!");
+    }
   }
 
   function copyReportText() {
