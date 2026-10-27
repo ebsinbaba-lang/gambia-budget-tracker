@@ -12,6 +12,9 @@
   <meta name="apple-mobile-web-app-title" content="Gambia Tracker">
   <link rel="apple-touch-icon" href="/app-icon-v2.png">
 
+  <!-- Added browser-based client-side OCR Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -42,8 +45,6 @@
       <h1>Gambia Vehicle Tracker</h1>
       <p>Scan or enter official government registration numbers to check financial allocations instantly.</p>
       <button class="main-scan-btn" onclick="toggleModal('scanModal', true)">➡️ Scan / Enter Plate</button>
-      
-      <!-- Fixed & Integrated UI Download Button Elements -->
       <button id="installAppBtn" class="pwa-btn" onclick="installPWA()">Download App</button>
     </div>
   </div>
@@ -83,7 +84,7 @@
     // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW register tracer context handled."));
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW tracer context handled."));
       });
     }
 
@@ -92,10 +93,37 @@
       document.getElementById(id).style.display = show ? 'flex' : 'none';
     }
 
-    // Input Actions
-    function handleCameraScan() {
+    // Process real text from camera snapshot input
+    async function handleCameraScan() {
+      const fileInput = document.getElementById('camera-input');
+      if (!fileInput.files || fileInput.files.length === 0) return;
+
       toggleModal('scanModal', false);
-      sendRequest("GG 1101 A");
+      alert("Processing plate image, please wait a moment...");
+
+      const file = fileInput.files[0];
+      const imageUrl = URL.createObjectURL(file);
+
+      try {
+        // Runs Tesseract OCR on the user's snapshot image reference
+        const result = await Tesseract.recognize(imageUrl, 'eng');
+        let detectedText = result.data.text.trim().toUpperCase();
+        
+        // Strip out odd text visual breaks or invalid punctuation symbols
+        detectedText = detectedText.replace(/[^A-Z0-9 ]/g, "");
+
+        if (detectedText.length < 3) {
+          alert("Could not clearly read a plate number. Please try again or type manually.");
+          return;
+        }
+
+        sendRequest(detectedText);
+      } catch (error) {
+        console.error("OCR Scanner Failure:", error);
+        alert("Camera processing failed. Please type the prefix and number manually.");
+      } finally {
+        URL.revokeObjectURL(imageUrl);
+      }
     }
 
     function submitManualScan() {
@@ -174,8 +202,3 @@
       }
     }
 
-    // Backup Override Trigger: Guarantees button accessibility regardless of platform initialization caching
-    document.getElementById('installAppBtn').style.display = 'block';
-  </script>
-</body>
-</html>
