@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gambia Vehicle Tracker</title>
+  
+  <!-- Links your PWA manifest data so phones recognize it as a downloadable app -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2b8a3e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Gambia Tracker">
+  <link rel="apple-touch-icon" href="https://flaticon.com">
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -12,7 +21,8 @@
     .app-logo { font-size: 50px; margin-bottom: 15px; }
     h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
     p { color: #6c757d; font-size: 15px; margin-bottom: 40px; }
-    .main-scan-btn { width: 85%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(43,138,62,0.25); }
+    .main-scan-btn { width: 85%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(43,138,62,0.25); margin-bottom: 15px; }
+    .pwa-btn { width: 85%; background: #e8f5e9; color: #2b8a3e; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 15px; border: 2px solid #2b8a3e; cursor: pointer; display: none; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; padding: 20px; backdrop-filter: blur(4px); }
     .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; }
     .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; justify-content: space-between; }
@@ -33,16 +43,15 @@
     <h1>Gambia Vehicle Tracker</h1>
     <p>Scan or enter official government registration numbers to check financial allocations instantly.</p>
     <button class="main-scan-btn" onclick="toggleModal('scanModal', true)">Scan / Enter Plate</button>
+    
+    <!-- App Download Trigger Button Feature -->
+    <button id="installAppBtn" class="pwa-btn" onclick="installPWA()">📲 Download App</button>
   </div>
 </div>
 
-<!-- INPUT TRIGGER MODAL -->
 <div class="modal" id="scanModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <span>Scan License Identifier</span>
-      <span class="close-modal" onclick="toggleModal('scanModal', false)">&times;</span>
-    </div>
+    <div class="modal-header"><span>Scan License Identifier</span><span class="close-modal" onclick="toggleModal('scanModal', false)">&times;</span></div>
     <label for="camera-input" class="camera-label">📸 Launch Camera Scanner</label>
     <input type="file" accept="image/*" capture="environment" id="camera-input" onchange="handleCameraScan()">
     <div style="color:#adb5bd; margin-bottom:15px; font-size:12px; font-weight:600; letter-spacing: 0.5px;">OR ENTER MANUALLY</div>
@@ -51,15 +60,10 @@
   </div>
 </div>
 
-<!-- OUTPUT METRICS MODAL -->
 <div class="modal" id="reportModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <span>📋 Spending Analysis</span>
-      <span class="close-modal" onclick="toggleModal('reportModal', false)">&times;</span>
-    </div>
+    <div class="modal-header"><span>📋 Spending Analysis</span><span class="close-modal" onclick="toggleModal('reportModal', false)">&times;</span></div>
     <div class="report-text" id="reportContent">Loading...</div>
-    <!-- New Native Sharing Hook Options -->
     <button id="nativeShareBtn" class="system-share-btn" onclick="triggerNativeShare()">Share Report</button>
     <button class="submit-btn" onclick="copyReportText()">Copy Full Report Text</button>
   </div>
@@ -67,6 +71,7 @@
 
 <script>
   let shareText = "";
+  let deferredPrompt = null;
 
   function toggleModal(id, show) { 
     document.getElementById(id).style.display = show ? 'flex' : 'none'; 
@@ -79,10 +84,7 @@
 
   function submitManualScan() {
     const val = document.getElementById('plateInput').value.trim();
-    if(!val) {
-      alert("Please type a valid license plate string.");
-      return;
-    }
+    if(!val) return alert("Please type a valid license plate string.");
     toggleModal('scanModal', false);
     sendRequest(val);
   }
@@ -91,13 +93,10 @@
     try {
       const res = await fetch(`/api/scan?plate=${encodeURIComponent(plate)}`);
       const payload = await res.json();
-      if(!res.ok) {
-        alert(payload.error || "Verification issue encountered.");
-        return;
-      }
+      if(!res.ok) return alert(payload.error || "Verification issue encountered.");
       renderOutput(payload.data);
     } catch(err) {
-      alert("Error connecting to API logic. Double check that api/scan.js is saved in your repository.");
+      alert("Error connecting to API logic.");
     }
   }
 
@@ -123,27 +122,47 @@
     toggleModal('reportModal', true);
   }
 
-  // Uses the user device's native sharing sheet options launcher
   async function triggerNativeShare() {
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: 'Gambia Vehicle Transparency Report',
-          text: shareText
-        });
-      } catch (err) {
-        console.log("Share sheet cancelled or interrupted.");
-      }
+        await navigator.share({ title: 'Gambia Vehicle transparency report', text: shareText });
+      } catch (err) {}
     } else {
-      // Fallback if browser security controls restrict direct share access
       navigator.clipboard.writeText(shareText);
-      alert("System Share not supported on this browser context. Report text has been copied to your clipboard instead!");
+      alert("Report copied to your clipboard!");
     }
   }
 
   function copyReportText() {
     navigator.clipboard.writeText(shareText);
-    alert("Full vehicle report text copied! Ready to paste into TikTok or Facebook.");
+    alert("Full vehicle report text copied!");
+  }
+
+  // PWA APP DOWNLOAD LOGIC CODES
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installAppBtn').style.display = 'block';
+  });
+
+  function installPWA() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          document.getElementById('installAppBtn').style.display = 'none';
+        }
+        deferredPrompt = null;
+      });
+    } else {
+      // Manual fallback instructions specifically for iPhone / Safari setups
+      alert("To download this app on iPhone: Tap the 'Share' icon button at the bottom of Safari, then select 'Add to Home Screen'!");
+    }
+  }
+
+  // Show installation button on iOS if opened directly in Safari browser wrapper frames
+  if (navigator.standalone === false || (window.matchMedia('(display-mode: standalone)').matches === false && /iPhone|iPad|iPod/.test(navigator.userAgent))) {
+    document.getElementById('installAppBtn').style.display = 'block';
   }
 </script>
 </body>
