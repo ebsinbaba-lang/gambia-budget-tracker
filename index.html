@@ -144,26 +144,26 @@
     }
 
     function renderOutput(d) {
-      shareText = `📊 GAMBIA VEHICLE TRANSPARENCY REPORT 🇬🇲\n` +
-                  `Plate: ${d.plate.toUpperCase()}\n` +
-                  `Model: ${d.model}\n` +
-                  `Engine Size: ${d.engine}\n` +
-                  `Tank Size: ${d.tankSizeLitre} L\n\n` +
-                  `💰 BUDGET IMPACT:\n` +
-                  `• Market Value: D ${d.breakdown.vehicleCost.toLocaleString()}\n` +
-                  `• Cost of 1 Full Tank: D ${d.breakdown.singleTankCost.toLocaleString()}\n` +
-                  `• 5-Year Fuel Cost: D ${d.breakdown.fuelCost.toLocaleString()}\n` +
-                  `• Grand Total Cost: D ${d.breakdown.grandTotal.toLocaleString()}\n\n` +
-                  `⚡ ALTERNATIVE PUBLIC VALUE:\n` +
-                  `• Bags of Rice (50kg): ${d.equivalents.rice.toLocaleString()}\n` +
-                  `• Farm Tractors: ${d.equivalents.tractors}\n` +
-                  `• Clinic Air Conditioners: ${d.equivalents.acUnits}\n` +
-                  `• Hospital Ward Beds: ${d.equivalents.beds}\n\n` +
-                  `#GambiaBudgetTracker 🇬🇲`;
+  shareText = `📊 **GAMBIA VEHICLE TRANSPARENCY REPORT** 🇬🇲\n` +
+              `Plate: ${d.plate.toUpperCase()}\n` +
+              `Model: ${d.model}\n` +
+              `Engine Size: ${d.engine}\n` +
+              `Tank Size: ${d.tankSizeLitre} L\n\n` +
+              `💰 **BUDGET IMPACT:**\n` +
+              `• Market Value: D ${d.breakdown.vehicleCost.toLocaleString()}\n` +
+              `• Cost of 1 Full Tank: D ${d.breakdown.singleTankCost.toLocaleString()}\n` +
+              `• 5-Year Fuel Cost: D ${d.breakdown.fuelCost.toLocaleString()}\n` +
+              `• Grand Total Cost: D ${d.breakdown.grandTotal.toLocaleString()}\n\n` +
+              `⚡ **ALTERNATIVE PUBLIC VALUE:**\n` +
+              `• Bags of Rice (50kg): ${d.equivalents.rice.toLocaleString()}\n` +
+              `• Farm Tractors: ${d.equivalents.tractors}\n` +
+              `• Clinic Air Conditioners: ${d.equivalents.acUnits}\n` +
+              `• Hospital Ward Beds: ${d.equivalents.beds}\n\n` +
+              `#GambiaBudgetTracker 🇬🇲`;
 
-      document.getElementById('reportContent').innerText = shareText;
-      toggleModal('reportModal', true);
-    }
+  document.getElementById('reportContent').innerText = shareText;
+  toggleModal('reportModal', true);
+}
 
     async function triggerNativeShare() {
       if (navigator.share) {
