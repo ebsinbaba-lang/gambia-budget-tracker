@@ -16,18 +16,11 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
     .phone-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: center; }
-    .hero-section { padding: 30px 24px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .app-logo { font-size: 50px; margin-bottom: 5px; }
-    h1 { font-size: 26px; font-weight: 800; margin-bottom: 5px; }
-    p { color: #6c757d; font-size: 14px; margin-bottom: 25px; }
-    
-    /* Fleet Expenditure Ticker Tonal Styling Layout Dashboard */
-    .total-tracker-card { width: 85%; background: #fff5f5; border: 2px solid #ffc9c9; border-radius: 16px; padding: 20px 15px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: center; }
-    .tracker-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #e03131; letter-spacing: 1px; margin-bottom: 6px; }
-    .tracker-amount { font-size: 28px; font-weight: 900; color: #c92a2a; margin-bottom: 8px; letter-spacing: -0.5px; }
-    .tracker-equivalent { font-size: 12px; font-weight: 600; color: #495057; line-height: 1.4; padding: 0 5px; }
-
-    .main-scan-btn { width: 85%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(43,138,62,0.2); }
+    .hero-section { padding: 40px 24px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .app-logo { font-size: 50px; margin-bottom: 10px; }
+    h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    p { color: #6c757d; font-size: 15px; margin-bottom: 40px; }
+    .main-scan-btn { width: 85%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; cursor: pointer; margin-bottom: 15px; }
     .pwa-btn { width: 85%; background: #e8f5e9; color: #2b8a3e; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 15px; border: 2px dashed #2b8a3e; cursor: pointer; display: none; text-align: center; margin: 10px auto; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; }
     .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
@@ -35,7 +28,7 @@
     .close-modal { cursor: pointer; color: #adb5bd; font-size: 24px; }
     .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
     .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; }
-    .report-text { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; white-space: pre-wrap; font-size: 14px; line-height: 1.5; }
+    .report-text { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; white-space: pre-wrap; font-size: 14px; }
     .system-share-btn { width: 100%; display: block; background: #1c7ed6; color: white; padding: 14px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; margin-bottom: 10px; }
   </style>
 </head>
@@ -45,21 +38,13 @@
     <div class="hero-section">
       <div class="app-logo">🇬🇲</div>
       <h1>Gambia Vehicle Tracker</h1>
-      <p>Track public expenditure allocations for state fleets transparently.</p>
-      
-      <!-- LIVE TOTAL TRACKER HOME MODULE -->
-      <div class="total-tracker-card">
-        <div class="tracker-title">⚠️ Tracked Fleet Budget (5-Years)</div>
-        <div class="tracker-amount" id="globalFleetTicker">D 00,000,000</div>
-        <div class="tracker-equivalent" id="globalFleetEquivalent">Loading fleet utilities allocation models...</div>
-      </div>
-
+      <p>Enter official government registration numbers to check financial allocations instantly.</p>
       <button class="main-scan-btn" onclick="toggleModal('scanModal', true)">➡️ Enter Registration Plate</button>
       <button id="installAppBtn" class="pwa-btn" onclick="installPWA()">Download App</button>
     </div>
   </div>
 
-  <!-- INPUT SCREEN MODAL -->
+  <!-- INPUT MODAL -->
   <div class="modal" id="scanModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -71,7 +56,7 @@
     </div>
   </div>
 
-  <!-- REPORT OUTPUT DATA SCREEN MODAL -->
+  <!-- REPORT OUTPUT MODAL -->
   <div class="modal" id="reportModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -88,32 +73,14 @@
     let shareText = "";
     let deferredPrompt = null;
 
-    // Run ticker initialization metrics right when the window loads safely
-    window.addEventListener('DOMContentLoaded', () => {
-      calculateGlobalFleetExpenditure();
-    });
-
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW verified."));
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW handle registered."));
       });
     }
 
-    // Dynamic Overall Fleet Expenditure Ticker Tally Data Math
-    function calculateGlobalFleetExpenditure() {
-      // Hard values calculated cleanly directly matching your expanded api/scan.js profile records!
-      // Math model assumes baseline usage across all saved plates: cost of purchase + 5 years fuel metrics
-      const fleetTotalDalasis = 111365440; 
-      
-      // Calculate equivalent conversions
-      const riceBags = Math.floor(fleetTotalDalasis / 2500);
-      const farmTractors = Math.floor(fleetTotalDalasis / 1800000);
-
-      // Inject clean text values into home panel tickers
-      document.getElementById('globalFleetTicker').innerText = `D ${fleetTotalDalasis.toLocaleString()}`;
-      document.getElementById('globalFleetEquivalent').innerText = `This public funding could instead purchase alternative utility benchmarks of ${riceBags.toLocaleString()} Bags of Rice or ${farmTractors} Farm Tractors for rural communities.`;
-    }
-
+    // Modal Manager
     function toggleModal(id, show) {
       document.getElementById(id).style.display = show ? 'flex' : 'none';
       if (show && id === 'scanModal') {
@@ -121,6 +88,7 @@
       }
     }
 
+    // Smart Auto-Spacing Input Formatter
     const plateInput = document.getElementById('plateInput');
     plateInput.addEventListener('input', (e) => {
       let value = e.target.value.replace(/\s+/g, '').toUpperCase();
@@ -143,6 +111,7 @@
       e.target.value = formatted;
     });
 
+    // Manual Entry Submission Logic
     function submitManualScan() {
       const val = document.getElementById('plateInput').value.trim();
       if(!val) return alert("Please type a valid license plate string.");
@@ -157,7 +126,7 @@
         if(!res.ok) return alert(payload.error || "Verification issue encountered.");
         renderOutput(payload.data);
       } catch(err) {
-        alert("Error connecting to API serverless calculation layers.");
+        alert("Error connecting to API logic.");
       }
     }
 
@@ -180,4 +149,51 @@
         
                   `#GambiaBudgetTracker 🇬🇲`;
 
-      // Smart innerHTML interpreter fixes formatting layout on user screens immediately
+      // Display as raw clean text layout without breaking execution
+      document.getElementById('reportContent').innerHTML = shareText
+        .replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+
+      toggleModal('reportModal', true);
+    }
+
+    async function triggerNativeShare() {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'Gambia Vehicle Transparency Report', text: shareText });
+        } catch (err) {}
+      } else {
+        alert("Native sharing not supported on this browser context. Use Copy Text option.");
+      }
+    }
+
+    function copyReportText() {
+      navigator.clipboard.writeText(shareText);
+      alert("Full vehicle report text copied!");
+    }
+
+    // PWA Installation Events
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installAppBtn').style.display = 'block';
+    });
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            document.getElementById('installAppBtn').style.display = 'none';
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        alert("To download: Tap your browser's menu (three dots or share arrow) and select 'Add to Home screen' or 'Install app'.");
+      }
+    }
+
+    document.getElementById('installAppBtn').style.display = 'block';
+  </script>
+</body>
+</html>
