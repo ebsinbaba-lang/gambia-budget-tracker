@@ -38,14 +38,7 @@
         .modal-footer { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
         .share-btn { display: inline-flex; align-items: center; justify-content: center; background-color: var(--accent-blue); color: white; border: none; border-radius: 8px; padding: 12px 20px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s ease; width: 100%; }
         .share-btn:hover { background-color: var(--accent-blue-hover); }
-        .toast-prompt { display: none; background-color: #323232; color: white; text-align: center; border-radius: 4px; padding: 8px 16px; font-size: 14px; font-weight: 500; margin-top: 8px; animation: fadeInOut 2s ease; }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            15% { opacity: 1; }
-            85% { opacity: 1; }
-            100% { opacity: 0; }
-        }
+        .toast-prompt { display: none; background-color: #323232; color: white; text-align: center; border-radius: 4px; padding: 8px 16px; font-size: 14px; font-weight: 500; margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -64,7 +57,7 @@
         </button>
     </div>
 
-    <!-- Stabilized Output Pop-up Modal with Share Action Block -->
+    <!-- Output Pop-up Modal -->
     <div class="modal-overlay" id="resultModal">
         <div class="modal-content">
             <button class="close-modal" id="closeModalBtn">&times;</button>
@@ -134,7 +127,7 @@
             e.target.setSelectionRange(cursorPosition + spaceCountDiff, cursorPosition + spaceCountDiff);
         });
 
-        // Form Validation & Relative API Request Lifecycle
+        // Form Validation & API Request Lifecycle
         async function lookUpPlate() {
             const rawPlate = plateInput.value.trim();
             if (!rawPlate) {
@@ -143,7 +136,7 @@
             }
 
             const parts = rawPlate.split(' ');
-            const typedPrefix = parts[0]; 
+            const typedPrefix = parts[0]; // FIXED: Extracting index 0 correctly as a text string
 
             if (!VALID_PREFIXES.includes(typedPrefix)) {
                 alert(`Invalid plate prefix! This tracker strictly requires valid official Gambian government plates starting with: ${VALID_PREFIXES.join(', ')}`);
@@ -172,17 +165,23 @@
 
         // Pop-up Markdown Formatter Strategy Engine
         function displayRenderedModal(rawMarkdownText) {
-            // Preserves unedited string for clipboard copy operations
             window.currentRawPayloadText = rawMarkdownText; 
             
             let htmlFormed = rawMarkdownText
+                .replace(/\*\*(.*?)\*\"/g, '<h4>$1</h4>') // Safety clean headers map
                 .replace(/\*\*(.*?)\*\*/g, '<h4>$1</h4>')
                 .replace(/\n/g, '<br>');
 
             modalTextTarget.innerHTML = htmlFormed;
-            toastPrompt.style.display = 'none'; // Clear any lingering visual tracking alerts
+            toastPrompt.style.display = 'none'; 
             resultModal.style.display = 'flex';
         }
 
-        // Native Native Device Clipboard Copy Execution Strategy
+        // Native Device Clipboard Copy Execution Strategy
         shareBtn.addEventListener('click', async () => {
+            if (!window.currentRawPayloadText) return;
+            
+            try {
+                await navigator.clipboard.writeText(window.currentRawPayloadText);
+                triggerToastPrompt();
+            } catch (clipErr) {
