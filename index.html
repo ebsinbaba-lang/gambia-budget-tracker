@@ -172,12 +172,22 @@
     }
 
    // PWA Installation Events
-window.addEventListener('beforeinstallprompt', (e) => {
-  // SAFEGUARD: If already running standalone on the phone, hide the button completely and stop
-  if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
-    document.getElementById('installAppBtn').style.display = 'none';
-    return;
+function checkPWAState() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (isStandalone) {
+    const btn = document.getElementById('installAppBtn');
+    if (btn) btn.style.display = 'none';
+    return true;
   }
+  return false;
+}
+
+// Check state immediately when script loads
+checkPWAState();
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // If already running standalone on the phone, hide the button completely and stop
+  if (checkPWAState()) return;
 
   e.preventDefault();
   deferredPrompt = e;
@@ -191,6 +201,13 @@ function installPWA() {
       if (choiceResult.outcome === 'accepted') {
         document.getElementById('installAppBtn').style.display = 'none';
       }
+      deferredPrompt = null;
+    });
+  } else {
+    alert("To download: Tap your browser's menu (three dots or share arrow) and select 'Add to Home screen' or 'Install app'");
+  }
+}
+
       deferredPrompt = null;
     });
   } else {
