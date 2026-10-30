@@ -83,7 +83,7 @@
 
         const VALID_PREFIXES = ['GG', 'NAM', 'SH', 'SG', 'PR'];
 
-        // Dynamic 2-Letter vs 3-Letter Auto-Spacing Engine
+        // Automated Auto-Spacing Script
         plateInput.addEventListener('input', (e) => {
             let cursorPosition = e.target.selectionStart;
             let rawValue = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -100,12 +100,12 @@
                 if (remainder.length > 0) {
                     let numMatch = remainder.match(/^(\d{1,4})/);
                     if (numMatch) {
-                        formatted += ' ' + numMatch;
-                        let alphaRemainder = remainder.substring(numMatch.length);
+                        formatted += ' ' + numMatch[1];
+                        let alphaRemainder = remainder.substring(numMatch[1].length);
                         if (alphaRemainder.length > 0) {
                             let letterMatch = alphaRemainder.match(/^([A-Z]{1,2})/);
                             if (letterMatch) {
-                                formatted += ' ' + letterMatch;
+                                formatted += ' ' + letterMatch[1];
                             }
                         }
                     } else {
@@ -127,7 +127,7 @@
             e.target.setSelectionRange(cursorPosition + spaceCountDiff, cursorPosition + spaceCountDiff);
         });
 
-        // Form Validation & API Request Lifecycle
+        // Form Validation & Fetch Execution Routing
         async function lookUpPlate() {
             const rawPlate = plateInput.value.trim();
             if (!rawPlate) {
@@ -136,7 +136,7 @@
             }
 
             const parts = rawPlate.split(' ');
-            const typedPrefix = parts[0]; // CORRECTED: Grabs the exact text prefix "GG" from the array
+            const typedPrefix = parts[0]; // CORRECTED: Safely pulls index [0] to extract the text string format
 
             if (!VALID_PREFIXES.includes(typedPrefix)) {
                 alert(`Invalid plate prefix! This tracker strictly requires valid official Gambian government plates starting with: ${VALID_PREFIXES.join(', ')}`);
@@ -163,7 +163,7 @@
             }
         }
 
-        // Pop-up Markdown Formatter Strategy Engine
+        // Modal Header Markdown Renderer
         function displayRenderedModal(rawMarkdownText) {
             window.currentRawPayloadText = rawMarkdownText; 
             
@@ -176,7 +176,7 @@
             resultModal.style.display = 'flex';
         }
 
-        // Native Device Clipboard Copy Execution Strategy
+        // Device Clipboard Copy Controller
         shareBtn.addEventListener('click', async () => {
             if (!window.currentRawPayloadText) return;
             
@@ -188,3 +188,4 @@
             }
         });
 
+        function triggerToastPrompt() {
