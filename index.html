@@ -70,6 +70,14 @@
   </div>
 
   <script>
+    // FIX: Hide the download button instantly if opened as a downloaded app
+    if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+      document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('installAppBtn');
+        if (btn) btn.style.display = 'none';
+      });
+    }
+
     let shareText = "";
     let deferredPrompt = null;
 
@@ -124,6 +132,7 @@
         const res = await fetch(`/api/scan?plate=${encodeURIComponent(plate)}`);
         const payload = await res.json();
         if(!res.ok) return alert(payload.error || "Verification issue encountered.");
+        
         renderOutput(payload.data);
       } catch(err) {
         alert("Error connecting to API logic.");
@@ -148,9 +157,8 @@
                   `• Hospital Ward Beds: ${d.equivalents.beds}\n\n` +
                   `#GambiaBudgetTracker 🇬🇲`;
 
-      // Display as raw clean text layout without breaking execution
       document.getElementById('reportContent').innerHTML = shareText
-        .replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\n/g, '<br>');
 
       toggleModal('reportModal', true);
@@ -159,23 +167,33 @@
     async function triggerNativeShare() {
       if (navigator.share) {
         try {
-          await navigator.share({ title: 'Gambia Vehicle Transparency Report', text: shareText });
-        } catch (err) {}
+          await navigator.share({ title: 'Gambia Vehicle Report', text: shareText });
+        } catch (err) {
+          console.log("Share dismissed");
+        }
       } else {
-        alert("Native sharing not supported on this browser context. Use Copy Text option.");
+        alert("Native sharing is not supported on this browser device.");
       }
     }
 
     function copyReportText() {
-      navigator.clipboard.writeText(shareText);
-      alert("Full vehicle report text copied!");
+      const plainText = shareText.replace(/\*\*/g, '');
+      navigator.clipboard.writeText(plainText).then(() => {
+        alert("Full report text copied to your clipboard!");
+      }).catch(err => {
+        alert("Unable to copy text.");
+      });
     }
 
-    // PWA Installation Events
+    // PWA Installation Logic Hooks
     window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('installAppBtn').style.display = 'block';
+      // Only show button if not already in standalone app mode
+      if (!window.navigator.standalone && !window.matchMedia('(display-mode: standalone)').matches) {
+        e.preventDefault();
+        deferredPrompt = e;
+        const btn = document.getElementById('installAppBtn');
+        if(btn) btn.style.display = 'block';
+      }
     });
 
     function installPWA() {
@@ -183,16 +201,15 @@
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            document.getElementById('installAppBtn').style.display = 'none';
+            const btn = document.getElementById('installAppBtn');
+            if(btn) btn.style.display = 'none';
           }
           deferredPrompt = null;
         });
-      } else {
-        alert("To download: Tap your browser's menu (three dots or share arrow) and select 'Add to Home screen' or 'Install app'.");
       }
     }
 
-    document.getElementById('installAppBtn').style.display = 'block';
-  </script>
-</body>
-</html>
+    window.addEventListener('appinstalled', () => {
+      const btn = document.getElementById('installAppBtn');
+      if(btn) btn.style.display = 'none';
+    });
