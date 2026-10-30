@@ -70,14 +70,6 @@
   </div>
 
   <script>
-    // FIX: Hide the download button instantly if opened as a downloaded app
-    if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
-      document.addEventListener('DOMContentLoaded', () => {
-        const btn = document.getElementById('installAppBtn');
-        if (btn) btn.style.display = 'none';
-      });
-    }
-
     let shareText = "";
     let deferredPrompt = null;
 
@@ -132,7 +124,6 @@
         const res = await fetch(`/api/scan?plate=${encodeURIComponent(plate)}`);
         const payload = await res.json();
         if(!res.ok) return alert(payload.error || "Verification issue encountered.");
-        
         renderOutput(payload.data);
       } catch(err) {
         alert("Error connecting to API logic.");
@@ -157,6 +148,7 @@
                   `• Hospital Ward Beds: ${d.equivalents.beds}\n\n` +
                   `#GambiaBudgetTracker 🇬🇲`;
 
+      // Display as raw clean text layout without breaking execution
       document.getElementById('reportContent').innerHTML = shareText
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\n/g, '<br>');
@@ -187,13 +179,10 @@
 
     // PWA Installation Logic Hooks
     window.addEventListener('beforeinstallprompt', (e) => {
-      // Only show button if not already in standalone app mode
-      if (!window.navigator.standalone && !window.matchMedia('(display-mode: standalone)').matches) {
-        e.preventDefault();
-        deferredPrompt = e;
-        const btn = document.getElementById('installAppBtn');
-        if(btn) btn.style.display = 'block';
-      }
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById('installAppBtn');
+      if(btn) btn.style.display = 'block';
     });
 
     function installPWA() {
@@ -213,3 +202,6 @@
       const btn = document.getElementById('installAppBtn');
       if(btn) btn.style.display = 'none';
     });
+  </script>
+</body>
+</html>
