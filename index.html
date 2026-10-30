@@ -157,6 +157,7 @@
   </div>
 
   <script>
+    // 1. Manual-Only Spacing Script & Capitalization
     const inputEl = document.getElementById('plate-input');
     inputEl.addEventListener('input', (e) => {
       let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -190,40 +191,24 @@
       e.target.value = val;
     });
 
+    // 2. PWA Installation Handler
     let deferredPrompt;
-    const installBtn = document.getElementById('btn-install');
-
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-      if (installBtn) installBtn.style.display = 'none';
-    }
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (installBtn && !window.matchMedia('(display-mode: standalone)').matches) {
-        installBtn.style.display = 'block';
+      document.getElementById('btn-install').style.display = 'block';
+    });
+
+    document.getElementById('btn-install').addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+        });
       }
     });
 
-    if (installBtn) {
-      installBtn.addEventListener('click', () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              installBtn.style.display = 'none';
-            }
-            deferredPrompt = null;
-          });
-        }
-      });
-    }
-
-    window.addEventListener('appinstalled', () => {
-      if (installBtn) installBtn.style.display = 'none';
-      deferredPrompt = null;
-    });
-
+    // 3. Scanner Data Fetcher & Modal Renderer
     document.getElementById('btn-scan').addEventListener('click', executionScan);
     inputEl.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') executionScan();
@@ -260,6 +245,7 @@
       }
     }
 
+    // Modal Closing Logics
     document.getElementById('close-modal').addEventListener('click', () => {
       document.getElementById('result-modal').style.display = 'none';
     });
@@ -269,6 +255,7 @@
       }
     });
 
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(() => {});
