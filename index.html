@@ -11,6 +11,8 @@
             --primary-hover: #1b5e20;
             --dark-text: #1a1a1a;
             --muted-text: #666666;
+            --accent-blue: #1565c0;
+            --accent-blue-hover: #0d47a1;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f5f5f7; padding: 20px; }
@@ -24,12 +26,26 @@
         .action-btn { display: inline-flex; align-items: center; justify-content: center; background-color: var(--primary-green); color: white; border: none; border-radius: 8px; padding: 14px 28px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s ease; width: 100%; max-width: 320px; }
         .action-btn:hover { background-color: var(--primary-hover); }
         .btn-icon { margin-right: 8px; font-size: 18px; }
+        
         /* Modal Framework Styling */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
         .modal-content { background: white; padding: 24px; border-radius: 12px; max-width: 500px; width: 100%; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; }
         .modal-body h4 { margin-top: 16px; margin-bottom: 6px; font-size: 14px; color: var(--primary-green); letter-spacing: 0.5px; text-transform: uppercase; }
         .modal-body p { font-size: 15px; color: var(--dark-text); line-height: 1.6; margin-bottom: 12px; }
         .close-modal { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--muted-text); }
+        
+        /* Share Component Custom Layout */
+        .modal-footer { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+        .share-btn { display: inline-flex; align-items: center; justify-content: center; background-color: var(--accent-blue); color: white; border: none; border-radius: 8px; padding: 12px 20px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s ease; width: 100%; }
+        .share-btn:hover { background-color: var(--accent-blue-hover); }
+        .toast-prompt { display: none; background-color: #323232; color: white; text-align: center; border-radius: 4px; padding: 8px 16px; font-size: 14px; font-weight: 500; margin-top: 8px; animation: fadeInOut 2s ease; }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -48,11 +64,18 @@
         </button>
     </div>
 
-    <!-- Stabilized Output Pop-up Modal -->
+    <!-- Stabilized Output Pop-up Modal with Share Action Block -->
     <div class="modal-overlay" id="resultModal">
         <div class="modal-content">
             <button class="close-modal" id="closeModalBtn">&times;</button>
             <div class="modal-body" id="modalTextTarget"></div>
+            
+            <div class="modal-footer">
+                <button class="share-btn" id="shareBtn">
+                    <span class="btn-icon">📋</span> Copy & Share Report
+                </button>
+                <div class="toast-prompt" id="toastPrompt">Report copied to clipboard! Ready to share.</div>
+            </div>
         </div>
     </div>
 
@@ -62,6 +85,8 @@
         const resultModal = document.getElementById('resultModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const modalTextTarget = document.getElementById('modalTextTarget');
+        const shareBtn = document.getElementById('shareBtn');
+        const toastPrompt = document.getElementById('toastPrompt');
 
         const VALID_PREFIXES = ['GG', 'NAM', 'SH', 'SG', 'PR'];
 
@@ -80,15 +105,14 @@
                 formatted = prefixMatch;
                 
                 if (remainder.length > 0) {
-                    // Accepts up to 4 digits securely to match sequences like 0058 or 6663 cleanly
                     let numMatch = remainder.match(/^(\d{1,4})/);
                     if (numMatch) {
-                        formatted += ' ' + numMatch[0];
-                        let alphaRemainder = remainder.substring(numMatch[0].length);
+                        formatted += ' ' + numMatch;
+                        let alphaRemainder = remainder.substring(numMatch.length);
                         if (alphaRemainder.length > 0) {
                             let letterMatch = alphaRemainder.match(/^([A-Z]{1,2})/);
                             if (letterMatch) {
-                                formatted += ' ' + letterMatch[0];
+                                formatted += ' ' + letterMatch;
                             }
                         }
                     } else {
@@ -148,26 +172,17 @@
 
         // Pop-up Markdown Formatter Strategy Engine
         function displayRenderedModal(rawMarkdownText) {
-            window.currentRawPayloadText = rawMarkdownText; // Preserves unedited string for copy actions
+            // Preserves unedited string for clipboard copy operations
+            window.currentRawPayloadText = rawMarkdownText; 
             
             let htmlFormed = rawMarkdownText
                 .replace(/\*\*(.*?)\*\*/g, '<h4>$1</h4>')
                 .replace(/\n/g, '<br>');
 
             modalTextTarget.innerHTML = htmlFormed;
+            toastPrompt.style.display = 'none'; // Clear any lingering visual tracking alerts
             resultModal.style.display = 'flex';
         }
 
-        submitBtn.addEventListener('click', lookUpPlate);
-        plateInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') lookUpPlate(); });
-        closeModalBtn.addEventListener('click', () => { resultModal.style.display = 'none'; });
-        window.addEventListener('click', (e) => { if(e.target === resultModal) resultModal.style.display = 'none'; });
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration deferred:', err));
-            });
-        }
-    </script>
-</body>
-</html>
+        // Native Native Device Clipboard Copy Execution Strategy
+        shareBtn.addEventListener('click', async () => {
