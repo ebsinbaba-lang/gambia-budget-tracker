@@ -1,48 +1,58 @@
-// EXCLUSIVE PREFIX DATABASE (GG, NAM, SH, SG, PR)
-const prefixDatabase = {
-  "NAM": {
-    model: "Toyota Land Cruiser Prado (NAM Scheme)",
+// EXCLUSIVE DATABASE MATRIX: GG, NAM, SH, SG, PR
+const vehicleDatabase = {
+  // --- National Assembly Member Fleet ---
+  "NAM 112 A": {
+    model: "Toyota Land Cruiser Prado",
     estimatedCostDasi: 2500000, 
     fuelType: "Diesel",
     monthlyFuelMaintenanceDasi: 45000,
     budgetImpact: "D2,500,000 procurement cost plus D540,000 annual operational drain per vehicle.",
     alternativePublicValue: "Can fully fund 12 months of essential antibiotic & antimalarial supplies for a regional health clinic, or purchase 150 high-quality desks for community primary schools."
   },
-  "GG": {
-    model: "Mercedes-Benz E-Class / Ministry Fleet",
+
+  // --- Government General Fleet ---
+  "GG 204 B": {
+    model: "Mercedes-Benz E-Class (OIC Fleet)",
     estimatedCostDasi: 3800000,
     fuelType: "Petrol",
     monthlyFuelMaintenanceDasi: 60000,
     budgetImpact: "High-premium luxury fleet maintenance. Annual operational drain estimated at D720,000.",
     alternativePublicValue: "Equivalent to sinking 3 solar-powered clean water boreholes in rural Central River Region (CRR) communities."
   },
-  "SH": {
-    model: "Toyota Land Cruiser V8 (State House Security)",
+
+  // --- State House Security Fleets ---
+  "SH 001 A": {
+    model: "Toyota Land Cruiser V8 VVIP",
     estimatedCostDasi: 7500000,
     fuelType: "Petrol",
     monthlyFuelMaintenanceDasi: 95000,
     budgetImpact: "VVIP armored/high-displacement vehicle. Annual operational drain exceeding D1,140,000.",
     alternativePublicValue: "Could provide full 4-year university tuition scholarships for 25 Gambian students at the University of The Gambia (UTG)."
   },
-  "SG": {
-    model: "Nissan Hardbody Pick-up (State Agency)",
+
+  // --- Sovereign State Government Agencies ---
+  "SG 412 C": {
+    model: "Nissan Hardbody Pick-up",
     estimatedCostDasi: 1800000,
     fuelType: "Diesel",
     monthlyFuelMaintenanceDasi: 35000,
     budgetImpact: "Standard utility fleet vehicle. Annual operational drain estimated at D420,000.",
     alternativePublicValue: "Could purchase 1,400 bags of fertilizer to support smallholder rice farmers in the North Bank Region."
   },
-  "PR": {
-    model: "Range Rover Sentinel (Presidential Protocol)",
+
+  // --- Presidential Protocol Fleets ---
+  "PR 003 X": {
+    model: "Range Rover Sentinel (VIP Protocol)",
     estimatedCostDasi: 8200000,
     fuelType: "Petrol",
     monthlyFuelMaintenanceDasi: 110000,
-    budgetImpact: "High-tier armored protocol asset. Annual maintenance and fuel costs D1,320,000.",
+    budgetImpact: "High-tier armored protocol asset. Annual maintenance and high-displacement fuel footprint costs D1,320,000.",
     alternativePublicValue: "Could completely rebuild and modernize 4 dilapidated nursery blocks with sanitation facilities in rural settlements."
   }
 };
 
 export default async function handler(req, res) {
+  // Enable CORS headers so your frontend can communicate securely
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -52,23 +62,18 @@ export default async function handler(req, res) {
   }
 
   const { plate } = req.query;
+  
   if (!plate) {
-    return res.status(400).json({ error: "Missing plate query parameter." });
+    return res.status(400).json({ error: "No plate provided" });
   }
 
-  // Clean the text typed by the user
-  const cleanPlate = plate.replace(/\s+/g, '').toUpperCase();
-  const allowedPrefixes = ['GG', 'NAM', 'SH', 'SG', 'PR'];
+  // Formatting lookup string to match exactly
+  const cleanPlate = plate.toUpperCase().trim();
+  const matchedVehicle = vehicleDatabase[cleanPlate];
 
-  // Find which allowed prefix the plate starts with
-  const matchedPrefix = allowedPrefixes.find(prefix => cleanPlate.startsWith(prefix));
-
-  if (!matchedPrefix) {
-    return res.status(400).json({ error: "Invalid prefix. Plate must start with GG, NAM, SH, SG, or PR." });
+  if (!matchedVehicle) {
+    return res.status(404).json({ error: "Registration not found or custom prefix omitted." });
   }
 
-  // Get data for that specific prefix group
-  const vehicleData = prefixDatabase[matchedPrefix];
-
-  return res.status(200).json(vehicleData);
+  return res.status(200).json(matchedVehicle);
 }
