@@ -43,23 +43,41 @@
       document.body.style.paddingTop = '45px';
     }
 
-    // 2. PWA Installation Handler
+        // 2. PWA Installation Handler (Auto-Hides on Download) This make it disappear
     let deferredPrompt;
     const installBtn = document.getElementById('btn-install');
+
+    // Hide immediately if already running as an installed PWA standalone app
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      if (installBtn) installBtn.style.display = 'none';
+    }
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      installBtn.style.display = 'block';
+      if (installBtn) installBtn.style.display = 'block';
+    });
 
+    if (installBtn) {
       installBtn.addEventListener('click', () => {
-        installBtn.style.display = 'none';
+        if (!deferredPrompt) return;
+        installBtn.style.display = 'none'; // Hide immediately when clicked
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome !== 'accepted') {
+            installBtn.style.display = 'block'; // Show it back if they cancel the native prompt
+          }
           deferredPrompt = null;
         });
       });
+    }
+
+    // Fallback security: instantly vanish the button if the device fires the background success event
+    window.addEventListener('appinstalled', () => {
+      if (installBtn) installBtn.style.display = 'none';
+      deferredPrompt = null;
     });
+
 
     // iOS Safari Specific Notice
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
