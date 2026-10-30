@@ -4,50 +4,195 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gambia Vehicle Tracker</title>
-
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#2b8a3e">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Gambia Tracker">
-  <link rel="apple-touch-icon" href="/app-icon-v2.png">
-
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .phone-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: center; }
-    .hero-section { padding: 40px 24px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .app-logo { font-size: 50px; margin-bottom: 10px; }
-    h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
-    p { color: #6c757d; font-size: 15px; margin-bottom: 40px; }
-    .main-scan-btn { width: 85%; background: #2b8a3e; color: white; padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px; border: none; cursor: pointer; margin-bottom: 15px; }
-    .pwa-btn { width: 85%; background: #e8f5e9; color: #2b8a3e; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 15px; border: 2px dashed #2b8a3e; cursor: pointer; display: none; text-align: center; margin: 10px auto; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; }
-    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-    .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; justify-content: space-between; }
-    .close-modal { cursor: pointer; color: #adb5bd; font-size: 24px; }
-    .input-field { width: 100%; padding: 14px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-    .submit-btn { width: 100%; background: #111; color: white; padding: 15px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; }
-    .report-text { background: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; white-space: pre-wrap; font-size: 14px; }
-    .system-share-btn { width: 100%; display: block; background: #1c7ed6; color: white; padding: 14px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; margin-bottom: 10px; }
-  </style>
-  
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // 1. In-App Browser Detection
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isInAppBrowser = (ua.indexOf('TikTok') > -1) || (ua.indexOf('Instagram') > -1) || (ua.indexOf('FBAN') > -1) || (ua.indexOf('FBAV') > -1);
-
-    if (isInAppBrowser) {
-      document.getElementById('browser-warning').style.display = 'block';
-      document.body.style.paddingTop = '45px';
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8f9fa;
+      color: #212529;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+    .container {
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .logo {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    p {
+      color: #6c757d;
+      font-size: 14px;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+    .input-box {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      box-sizing: border-box;
+      text-transform: uppercase;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #198754;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    #btn-install {
+      background-color: #0d6efd;
+      margin-top: 15px;
+      display: none;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 450px;
+      width: 100%;
+      text-align: left;
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #6c757d;
+    }
+    .modal h2 {
+      margin-top: 0;
+      font-size: 20px;
+      border-bottom: 2px solid #f1f3f5;
+      padding-bottom: 10px;
+    }
+    .modal-field {
+      margin-bottom: 15px;
+    }
+    .modal-label {
+      font-weight: bold;
+      font-size: 12px;
+      color: #6c757d;
+      text-transform: uppercase;
+    }
+    .modal-value {
+      font-size: 16px;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
 
-        // 2. PWA Installation Handler (Auto-Hides on Download) This make it disappear
+  <div class="container">
+    <div class="logo">GM</div>
+    <h1>Gambia Vehicle Tracker</h1>
+    <p>Enter official government registration numbers to check financial allocations instantly.</p>
+    
+    <input type="text" id="plate-input" class="input-box" placeholder="e.g. NAM 112 A" maxlength="12">
+    <button id="btn-scan" class="btn">➡️ Enter Registration Plate</button>
+    <button id="btn-install" class="btn">📲 Install App</button>
+  </div>
+
+  <!-- Modal Screen -->
+  <div id="result-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="close-modal">&times;</span>
+      <h2 id="modal-model">Vehicle Details</h2>
+      
+      <div class="modal-field">
+        <div class="modal-label">Estimated Cost</div>
+        <div id="modal-cost" class="modal-value"></div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-label">Fuel Type</div>
+        <div id="modal-fuel" class="modal-value"></div>
+      </div>
+      <div class="modal-field">
+        <div id="modal-impact" class="modal-value"></div>
+      </div>
+      <div class="modal-field">
+        <div id="modal-value" class="modal-value"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const inputEl = document.getElementById('plate-input');
+    inputEl.addEventListener('input', (e) => {
+      let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      
+      let prefix = '';
+      if (val.startsWith('NAM')) prefix = 'NAM';
+      else if (val.startsWith('GG')) prefix = 'GG';
+      else if (val.startsWith('SH')) prefix = 'SH';
+      else if (val.startsWith('SG')) prefix = 'SG';
+      else if (val.startsWith('PR')) prefix = 'PR';
+
+      if (prefix) {
+        let rest = val.substring(prefix.length);
+        if (rest.length > 0) {
+          let numbers = rest.match(/^\d+/);
+          if (numbers) {
+            let numStr = numbers;
+            let lettersStr = rest.substring(numStr.length);
+            if (lettersStr.length > 0) {
+              val = `${prefix} ${numStr} ${lettersStr}`;
+            } else {
+              val = `${prefix} ${numStr}`;
+            }
+          } else {
+            val = `${prefix} ${rest}`;
+          }
+        } else {
+          val = prefix;
+        }
+      }
+      e.target.value = val;
+    });
+
     let deferredPrompt;
     const installBtn = document.getElementById('btn-install');
 
-    // Hide immediately if already running as an installed PWA standalone app
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
       if (installBtn) installBtn.style.display = 'none';
     }
@@ -55,217 +200,80 @@
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (installBtn) installBtn.style.display = 'block';
+      if (installBtn && !window.matchMedia('(display-mode: standalone)').matches) {
+        installBtn.style.display = 'block';
+      }
     });
 
     if (installBtn) {
       installBtn.addEventListener('click', () => {
-        if (!deferredPrompt) return;
-        installBtn.style.display = 'none'; // Hide immediately when clicked
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome !== 'accepted') {
-            installBtn.style.display = 'block'; // Show it back if they cancel the native prompt
-          }
-          deferredPrompt = null;
-        });
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              installBtn.style.display = 'none';
+            }
+            deferredPrompt = null;
+          });
+        }
       });
     }
 
-    // Fallback security: instantly vanish the button if the device fires the background success event
     window.addEventListener('appinstalled', () => {
       if (installBtn) installBtn.style.display = 'none';
       deferredPrompt = null;
     });
 
+    document.getElementById('btn-scan').addEventListener('click', executionScan);
+    inputEl.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') executionScan();
+    });
 
-    // iOS Safari Specific Notice
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    
-    if (isIOS && !isStandalone) {
-      installBtn.style.display = 'block';
-      installBtn.innerHTML = '📥 How to Install on iPhone';
-      installBtn.addEventListener('click', () => {
-        alert('To install on your iPhone:\n1. Tap the Share button (📤) at the bottom.\n2. Scroll down and tap "Add to Home Screen".');
-      });
+    function formatMarkdownText(text) {
+      if (!text) return '';
+      return text.replace(/\*\*(.*?)\*\:/g, '<strong>$1:</strong>');
     }
-  });
-</script>
-  
-</head>
-<body>
 
-  <div class="phone-container">
-    <!-- TikTok / In-App Browser Breakout Banner -->
-<div id="browser-warning" style="display: none; background: #fe2c55; color: white; padding: 12px; text-align: center; font-family: sans-serif; font-size: 14px; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-  ⚠️ TO DOWNLOAD APP: Tap the 3 dots (⋮) or Share (📤) and select "Open in Chrome" or "Open in Safari"
-</div>
+    async function executionScan() {
+      const plate = inputEl.value.trim();
+      if (!plate) return alert('Please enter a registration plate');
 
-<!-- Native App Download Button -->
-<button id="btn-install" style="display: none; background: #007bff; color: white; font-weight: bold; padding: 15px; border: none; border-radius: 8px; width: 85%; margin: 10px auto 20px auto; font-size: 16px; cursor: pointer; display: block;">
-  📥 Install Gambia Vehicle Accountability App
-</button>
+      try {
+        const response = await fetch(`/api/scan?plate=${encodeURIComponent(plate)}`);
+        if (!response.ok) {
+          const errData = await response.json();
+          return alert(errData.error || 'Registration not found');
+        }
+        
+        const data = await response.json();
+        
+        document.getElementById('modal-model').innerText = data.model;
+        document.getElementById('modal-cost').innerText = `D${data.estimatedCostDasi.toLocaleString()}`;
+        document.getElementById('modal-fuel').innerText = `${data.fuelType} (Maint: D${data.monthlyFuelMaintenanceDasi.toLocaleString()}/mo)`;
+        
+        document.getElementById('modal-impact').innerHTML = formatMarkdownText(data.budgetImpact);
+        document.getElementById('modal-value').innerHTML = formatMarkdownText(data.alternativePublicValue);
+        
+        document.getElementById('result-modal').style.display = 'flex';
+      } catch (err) {
+        alert('Error connecting to API logic.');
+      }
+    }
 
-    <div class="hero-section">
-      <div class="app-logo">🇬🇲</div>
-      <h1>Gambia Vehicle Tracker</h1>
-      <p>Enter official government registration numbers to check financial allocations instantly.</p>
-      <button class="main-scan-btn" onclick="toggleModal('scanModal', true)">➡️ Enter Registration Plate</button>
-      
-    </div>
-  </div>
+    document.getElementById('close-modal').addEventListener('click', () => {
+      document.getElementById('result-modal').style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('result-modal')) {
+        document.getElementById('result-modal').style.display = 'none';
+      }
+    });
 
-  <!-- INPUT MODAL -->
-  <div class="modal" id="scanModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span>License Identifier</span>
-        <span class="close-modal" onclick="toggleModal('scanModal', false)">&times;</span>
-      </div>
-      <input type="text" id="plateInput" class="input-field" placeholder="e.g. GG 1101 A" maxlength="11">
-      <button class="submit-btn" onclick="submitManualScan()">Analyse Spent Funds</button>
-    </div>
-  </div>
-
-  <!-- REPORT OUTPUT MODAL -->
-  <div class="modal" id="reportModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span>📊 Spending Analysis</span>
-        <span class="close-modal" onclick="toggleModal('reportModal', false)">&times;</span>
-      </div>
-      <div class="report-text" id="reportContent">Loading...</div>
-      <button id="nativeShareBtn" class="system-share-btn" onclick="triggerNativeShare()">📢 Share Report</button>
-      <button class="submit-btn" onclick="copyReportText()">📋 Copy Full Report Text</button>
-    </div>
-  </div>
-
-  <script>
-    let shareText = "";
-    let deferredPrompt = null;
-
-    // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW handle registered."));
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
       });
     }
-
-    // Modal Manager
-    function toggleModal(id, show) {
-      document.getElementById(id).style.display = show ? 'flex' : 'none';
-      if (show && id === 'scanModal') {
-        setTimeout(() => document.getElementById('plateInput').focus(), 100);
-      }
-    }
-
-    // Smart Auto-Spacing Input Formatter
-    const plateInput = document.getElementById('plateInput');
-    plateInput.addEventListener('input', (e) => {
-      let value = e.target.value.replace(/\s+/g, '').toUpperCase();
-      value = value.replace(/[^A-Z0-9]/g, '');
-      let formatted = '';
-      let prefixLength = value.startsWith('NAM') ? 3 : 2;
-
-      if (value.length > 0) {
-        let part1 = value.substring(0, prefixLength);
-        formatted += part1;
-        if (value.length > prefixLength) {
-          let part2 = value.substring(prefixLength, prefixLength + 4);
-          formatted += ' ' + part2;
-          if (value.length > prefixLength + 4) {
-            let part3 = value.substring(prefixLength + 4, prefixLength + 5);
-            formatted += ' ' + part3;
-          }
-        }
-      }
-      e.target.value = formatted;
-    });
-
-    // Manual Entry Submission Logic
-    function submitManualScan() {
-      const val = document.getElementById('plateInput').value.trim();
-      if(!val) return alert("Please type a valid license plate string.");
-      toggleModal('scanModal', false);
-      sendRequest(val);
-    }
-
-    async function sendRequest(plate) {
-      try {
-        const res = await fetch(`/api/scan?plate=${encodeURIComponent(plate)}`);
-        const payload = await res.json();
-        if(!res.ok) return alert(payload.error || "Verification issue encountered.");
-        renderOutput(payload.data);
-      } catch(err) {
-        alert("Error connecting to API logic.");
-      }
-    }
-
-    function renderOutput(d) {
-      shareText = `📊 **GAMBIA VEHICLE TRANSPARENCY REPORT** 🇬🇲\n` +
-                  `Plate: ${d.plate.toUpperCase()}\n` +
-                  `Model: ${d.model}\n` +
-                  `Engine Size: ${d.engine}\n` +
-                  `Tank Size: ${d.tankSizeLitre} L\n\n` +
-                  `💰 **BUDGET IMPACT:**\n` +
-                  `• Market Value: D ${d.breakdown.vehicleCost.toLocaleString()}\n` +
-                  `• Cost of 1 Full Tank: D ${d.breakdown.singleTankCost.toLocaleString()}\n` +
-                  `• 5-Year Fuel Cost: D ${d.breakdown.fuelCost.toLocaleString()}\n` +
-                  `• Grand Total Cost: D ${d.breakdown.grandTotal.toLocaleString()}\n\n` +
-                  `⚡ **ALTERNATIVE PUBLIC VALUE:**\n` +
-                  `• Bags of Rice (50kg): ${d.equivalents.rice.toLocaleString()}\n` +
-                  `• Farm Tractors: ${d.equivalents.tractors}\n` +
-                  `• Clinic Air Conditioners: ${d.equivalents.acUnits}\n` +
-                  `• Hospital Ward Beds: ${d.equivalents.beds}\n\n` +
-        
-                  `#GambiaBudgetTracker 🇬🇲`;
-
-      // Display as raw clean text layout without breaking execution
-      document.getElementById('reportContent').innerHTML = shareText
-        .replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br>');
-
-      toggleModal('reportModal', true);
-    }
-
-    async function triggerNativeShare() {
-      if (navigator.share) {
-        try {
-          await navigator.share({ title: 'Gambia Vehicle Transparency Report', text: shareText });
-        } catch (err) {}
-      } else {
-        alert("Native sharing not supported on this browser context. Use Copy Text option.");
-      }
-    }
-
-    function copyReportText() {
-      navigator.clipboard.writeText(shareText);
-      alert("Full vehicle report text copied!");
-    }
-
-    // PWA Installation Events
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('installAppBtn').style.display = 'block';
-    });
-
-    function installPWA() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            document.getElementById('installAppBtn').style.display = 'none';
-          }
-          deferredPrompt = null;
-        });
-      } else {
-        alert("To download: Tap your browser's menu (three dots or share arrow) and select 'Add to Home screen' or 'Install app'.");
-      }
-    }
-
-    document.getElementById('installAppBtn').style.display = 'block';
   </script>
 </body>
 </html>
