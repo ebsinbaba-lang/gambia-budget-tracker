@@ -46,7 +46,7 @@
     <div class="card">
         <div class="country-code">GM</div>
         <div class="title">Gambia Vehicle Tracker</div>
-        <div class="subtitle">Enter official government registration numbers to check financial allocations instantly.</div>
+        . <div class="subtitle">Enter official government registration numbers to check financial allocations instantly.</div>
         
         <div class="input-container">
             <input type="text" id="plateInput" class="plate-input" placeholder="e.g. NAM 112 A" maxlength="11" autocomplete="off" autofocus>
@@ -100,12 +100,12 @@
                 if (remainder.length > 0) {
                     let numMatch = remainder.match(/^(\d{1,4})/);
                     if (numMatch) {
-                        formatted += ' ' + numMatch;
-                        let alphaRemainder = remainder.substring(numMatch.length);
+                        formatted += ' ' + numMatch[1];
+                        let alphaRemainder = remainder.substring(numMatch[1].length);
                         if (alphaRemainder.length > 0) {
                             let letterMatch = alphaRemainder.match(/^([A-Z]{1,2})/);
                             if (letterMatch) {
-                                formatted += ' ' + letterMatch;
+                                formatted += ' ' + letterMatch[1];
                             }
                         }
                     } else {
@@ -136,7 +136,7 @@
             }
 
             const parts = rawPlate.split(' ');
-            const typedPrefix = parts[0]; // FIXED: Extracts string chunk "GG" instead of an array object
+            const typedPrefix = parts[0]; // REAL FIX: Isolated the exact prefix string block
 
             if (!VALID_PREFIXES.includes(typedPrefix)) {
                 alert(`Invalid plate prefix! This tracker strictly requires valid official Gambian government plates starting with: ${VALID_PREFIXES.join(', ')}`);
@@ -168,7 +168,6 @@
             window.currentRawPayloadText = rawMarkdownText; 
             
             let htmlFormed = rawMarkdownText
-                .replace(/\*\*(.*?)\*\"/g, '<h4>$1</h4>') 
                 .replace(/\*\*(.*?)\*\*/g, '<h4>$1</h4>')
                 .replace(/\n/g, '<br>');
 
@@ -185,3 +184,7 @@
                 await navigator.clipboard.writeText(window.currentRawPayloadText);
                 triggerToastPrompt();
             } catch (clipErr) {
+                console.error("Copy routing execution failed:", clipErr);
+            }
+        });
+
