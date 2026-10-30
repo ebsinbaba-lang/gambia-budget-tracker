@@ -157,41 +157,37 @@
   </div>
 
   <script>
-    // 1. Manual-Only Spacing Script & Capitalization
+    // 1. Fixed Auto-Spacing Input Handler
     const inputEl = document.getElementById('plate-input');
     inputEl.addEventListener('input', (e) => {
-      let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      let cursorPosition = e.target.selectionStart;
+      let rawVal = e.target.value.toUpperCase();
       
-      let prefix = '';
-      if (val.startsWith('NAM')) prefix = 'NAM';
-      else if (val.startsWith('GG')) prefix = 'GG';
-      else if (val.startsWith('SH')) prefix = 'SH';
-      else if (val.startsWith('SG')) prefix = 'SG';
-      else if (val.startsWith('PR')) prefix = 'PR';
-
-      if (prefix) {
-        let rest = val.substring(prefix.length);
-        if (rest.length > 0) {
-          let numbers = rest.match(/^\d+/);
-          if (numbers) {
-            let numStr = numbers;
-            let lettersStr = rest.substring(numStr.length);
-            if (lettersStr.length > 0) {
-              val = `${prefix} ${numStr} ${lettersStr}`;
+      // Separate words cleanly by matching prefixes
+      let tokens = rawVal.replace(/\s+/g, ' ').trim().split(' ');
+      if (tokens.length > 0) {
+        let prefix = tokens[0];
+        if (['NAM', 'GG', 'SH', 'SG', 'PR'].includes(prefix)) {
+          let rest = rawVal.substring(rawVal.indexOf(prefix) + prefix.length).replace(/[^A-Z0-9]/g, '');
+          let numMatch = rest.match(/^\d+/);
+          if (numMatch) {
+            let numStr = numMatch[0];
+            let letStr = rest.substring(numStr.length);
+            if (letStr.length > 0) {
+              e.target.value = `${prefix} ${numStr} ${letStr}`;
             } else {
-              val = `${prefix} ${numStr}`;
+              e.target.value = `${prefix} ${numStr}`;
             }
+          } else if (rest.length > 0) {
+            e.target.value = `${prefix} ${rest}`;
           } else {
-            val = `${prefix} ${rest}`;
+            e.target.value = prefix;
           }
-        } else {
-          val = prefix;
         }
       }
-      e.target.value = val;
     });
 
-    // 2. PWA Installation Handler
+    // 2. Original Installation Handler
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -208,7 +204,7 @@
       }
     });
 
-    // 3. Scanner Data Fetcher & Modal Renderer
+    // 3. Data Scan Logic
     document.getElementById('btn-scan').addEventListener('click', executionScan);
     inputEl.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') executionScan();
@@ -245,7 +241,6 @@
       }
     }
 
-    // Modal Closing Logics
     document.getElementById('close-modal').addEventListener('click', () => {
       document.getElementById('result-modal').style.display = 'none';
     });
@@ -255,7 +250,6 @@
       }
     });
 
-    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(() => {});
