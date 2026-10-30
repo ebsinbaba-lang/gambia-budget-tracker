@@ -136,7 +136,7 @@
             }
 
             const parts = rawPlate.split(' ');
-            const typedPrefix = parts[0]; // FIXED: Extracting index 0 correctly as a text string
+            const typedPrefix = parts[0]; // FIXED: Extracts string chunk "GG" instead of an array object
 
             if (!VALID_PREFIXES.includes(typedPrefix)) {
                 alert(`Invalid plate prefix! This tracker strictly requires valid official Gambian government plates starting with: ${VALID_PREFIXES.join(', ')}`);
@@ -168,7 +168,7 @@
             window.currentRawPayloadText = rawMarkdownText; 
             
             let htmlFormed = rawMarkdownText
-                .replace(/\*\*(.*?)\*\"/g, '<h4>$1</h4>') // Safety clean headers map
+                .replace(/\*\*(.*?)\*\"/g, '<h4>$1</h4>') 
                 .replace(/\*\*(.*?)\*\*/g, '<h4>$1</h4>')
                 .replace(/\n/g, '<br>');
 
